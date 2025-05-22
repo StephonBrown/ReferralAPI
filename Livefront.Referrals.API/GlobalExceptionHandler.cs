@@ -1,4 +1,5 @@
 using System.Net;
+using Livefront.Referrals.API.Exceptions;
 using Livefront.Referrals.API.Models;
 using Livefront.Referrals.DataAccess.Exceptions;
 using Livefront.Referrals.DataAccess.Services;
@@ -34,6 +35,11 @@ public class GlobalExceptionHandler : IExceptionHandler
         
         switch (exception)
         {
+            case UserNotFoundException userNotFoundException:
+                errorResponse.Message = userNotFoundException.Message;
+                errorResponse.StatusCode = (int)HttpStatusCode.NotFound;
+                errorResponse.Title = "User Not Found";
+                break;
             case ReferralLinkAlreadyExistsException:
                 errorResponse.StatusCode = (int)HttpStatusCode.Conflict;
                 errorResponse.Title = "Conflict";
@@ -44,7 +50,7 @@ public class GlobalExceptionHandler : IExceptionHandler
                 errorResponse.Title = "Bad Gateway";
                 errorResponse.Message = "Unable to connect to required services";
                 break;
-            case BadHttpRequestException:
+            case ArgumentException:
                 errorResponse.StatusCode = (int)HttpStatusCode.BadRequest;
                 errorResponse.Title = exception.GetType().Name;
                 errorResponse.Message = exception.Message;
