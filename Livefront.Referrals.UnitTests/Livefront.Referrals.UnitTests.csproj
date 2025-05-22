@@ -24,7 +24,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="API\Services\ReferralLinkServiceTests\" />
       <Folder Include="API\Services\ReferralServiceTests\" />
     </ItemGroup>
 
