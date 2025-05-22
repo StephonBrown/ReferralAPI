@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Livefront.Referrals.DataAccess.Repositories;
 
-public class UserRepository : IUserRespository
+public class UserRepository : IUserRepository
 {
     private readonly DbContext referralsContext;
     private readonly ILogger<ReferralRepository> logger;
@@ -14,18 +14,21 @@ public class UserRepository : IUserRespository
         this.referralsContext = referralsContext;
         this.logger = logger;
     }
-    
-    public User GetById(Guid userId)
+
+    /// <inheritdoc />
+    public async Task<User> GetById(Guid userId, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
 
-    public string GetReferralCodeByUserId(Guid userId)
+    /// <inheritdoc />
+    public async Task<string> GetReferralCodeByUserId(Guid userId, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
 
-    public User GetUserByReferralCode(string referralCode)
+    /// <inheritdoc />
+    public async Task<User> GetUserByReferralCode(string referralCode, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
