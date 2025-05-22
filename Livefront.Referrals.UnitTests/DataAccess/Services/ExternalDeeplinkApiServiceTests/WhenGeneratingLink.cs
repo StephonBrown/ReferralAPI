@@ -26,8 +26,7 @@ public class WhenGeneratingLink : BaseDeeplinkApiTestFixture
     {
         //Arrange
         referralCode = "IREFERREDYOU";
-        linkChannel = "SMS";
-        var createLinkRequest = new CreateDeeplinkApiRequest(referralCode, linkChannel);
+        var createLinkRequest = new CreateDeeplinkApiRequest(referralCode);
         var deepLink = new DeepLink( 
             1,
             DateTime.UtcNow, 
@@ -42,7 +41,7 @@ public class WhenGeneratingLink : BaseDeeplinkApiTestFixture
                 LinkGenerationUri);
         
         //Act
-        var generatedLink = await externalDeeplinkApiService.GenerateLink(referralCode, linkChannel, cancellationToken);
+        var generatedLink = await externalDeeplinkApiService.GenerateLink(referralCode, cancellationToken);
 
         //Assert
         Assert.That(generatedLink?.Id, Is.EqualTo(deepLink.Id));
@@ -59,22 +58,9 @@ public class WhenGeneratingLink : BaseDeeplinkApiTestFixture
     {
         //Arrange
         referralCode = "";
-        linkChannel = "SMS";
 
         //Act/Assert
-        var exception = Assert.ThrowsAsync<ArgumentException>(async () => await externalDeeplinkApiService.GenerateLink(referralCode, linkChannel, cancellationToken));
-        Assert.That(exception.ParamName, Is.EqualTo("referralCode"));
-    }
-    
-    [Test]
-    public void GivenInvalidChannel_ThenThrowArgumentException()
-    {
-        //Arrange
-        referralCode = "IREFERREDYOU";
-        linkChannel = "";
-        
-        //Act/Assert
-        var exception = Assert.ThrowsAsync<ArgumentException>(async () => await externalDeeplinkApiService.GenerateLink(referralCode, linkChannel, cancellationToken));
+        var exception = Assert.ThrowsAsync<ArgumentException>(async () => await externalDeeplinkApiService.GenerateLink(referralCode, cancellationToken));
         Assert.That(exception.ParamName, Is.EqualTo("referralCode"));
     }
     
@@ -83,7 +69,6 @@ public class WhenGeneratingLink : BaseDeeplinkApiTestFixture
     {
         //Arrange
         referralCode = "IREFERREDYOU";
-        linkChannel = "SMS";
         
         var mockedRequestEndpoint =
             SetExceptionThrowingRequestHandler(
@@ -92,7 +77,7 @@ public class WhenGeneratingLink : BaseDeeplinkApiTestFixture
         new HttpRequestException());
         
         //Act/Assert
-        var exception = Assert.ThrowsAsync<ExternalApiServiceException>(async () => await externalDeeplinkApiService.GenerateLink(referralCode, linkChannel, cancellationToken));
+        var exception = Assert.ThrowsAsync<ExternalApiServiceException>(async () => await externalDeeplinkApiService.GenerateLink(referralCode, cancellationToken));
         Assert.That(exception, Is.TypeOf<ExternalApiServiceException>());
         Assert.That(exception.InnerException, Is.TypeOf<HttpRequestException>());
         Assert.That(mockHttpHandler.GetMatchCount(mockedRequestEndpoint), Is.EqualTo(1));

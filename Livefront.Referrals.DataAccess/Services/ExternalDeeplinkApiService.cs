@@ -2,7 +2,6 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using Livefront.Referrals.DataAccess.Exceptions;
-using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Models.DeeplinkApi;
 using Livefront.Referrals.DataAccess.Models.DeeplinkApi.Models;
 using Microsoft.Extensions.Logging;
@@ -20,21 +19,16 @@ public class ExternalDeeplinkApiService : IExternalDeeplinkApiService
         this.logger = logger;
     }
 
-    public async Task<DeepLink?> GenerateLink(string referralCode, string channel, CancellationToken cancellationToken = default)
+    public async Task<DeepLink> GenerateLink(string referralCode, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(referralCode))
         {
             logger.LogWarning("Invalid referral code {@ReferralCode}", referralCode);
             throw new ArgumentException("Referral code must not be empty", nameof(referralCode));
         }
+        
 
-        if (string.IsNullOrWhiteSpace(channel))
-        {
-            logger.LogWarning("Invalid referral code {@ReferralCode}", referralCode);
-            throw new ArgumentException("Channel must not be empty", nameof(referralCode));
-        }
-
-        var generateLinkApiRequest = new CreateDeeplinkApiRequest(userReferralCode: referralCode, channel: channel);
+        var generateLinkApiRequest = new CreateDeeplinkApiRequest(userReferralCode: referralCode);
         
         return await SendRequest<DeepLink, CreateDeeplinkApiRequest>(HttpMethod.Post, DeeplinkApiConstants.LinkGenerationEndpoint, generateLinkApiRequest, cancellationToken);
     }
@@ -90,7 +84,7 @@ public class ExternalDeeplinkApiService : IExternalDeeplinkApiService
     /// <typeparam name="TRequest"> A Generic request type to allow different operations</typeparam>
     /// <returns>The type specified in the call</returns>
     /// <exception cref="ExternalApiServiceException"></exception>
-    private async Task<TResponse?> SendRequest<TResponse, TRequest>(HttpMethod httpMethod, string endpoint, TRequest? requestData, CancellationToken cancellationToken)
+    private async Task<TResponse> SendRequest<TResponse, TRequest>(HttpMethod httpMethod, string endpoint, TRequest? requestData, CancellationToken cancellationToken)
     {
         var contextualLogger = Log
             .ForContext<ExternalDeeplinkApiService>()
