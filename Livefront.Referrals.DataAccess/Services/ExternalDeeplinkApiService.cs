@@ -4,6 +4,7 @@ using System.Text.Json;
 using Livefront.Referrals.DataAccess.Exceptions;
 using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Models.DeeplinkApi;
+using Livefront.Referrals.DataAccess.Models.DeeplinkApi.Models;
 using Microsoft.Extensions.Logging;
 using Serilog;
 

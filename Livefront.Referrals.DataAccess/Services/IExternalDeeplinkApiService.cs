@@ -1,4 +1,5 @@
 using Livefront.Referrals.DataAccess.Models.DeeplinkApi;
+using Livefront.Referrals.DataAccess.Models.DeeplinkApi.Models;
 
 namespace Livefront.Referrals.DataAccess.Services;
 
