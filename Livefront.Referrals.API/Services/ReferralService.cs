@@ -1,18 +1,17 @@
 using Livefront.Referrals.API.Models;
 using Livefront.Referrals.DataAccess.Repositories;
-using Livefront.Referrals.DataAccess.Services;
 
 namespace Livefront.Referrals.API.Services;
 
 public class ReferralService : IReferralService
 {
     private readonly IReferralRepository referralLinkRepository;
-    private readonly IUserRespository userRespository;
+    private readonly IUserRepository userRepository;
     
-    public ReferralService(IReferralRepository referralLinkRepository, IUserRespository userRespository)
+    public ReferralService(IReferralRepository referralLinkRepository, IUserRepository userRepository)
     {
         this.referralLinkRepository = referralLinkRepository;
-        this.userRespository = userRespository;
+        this.userRepository = userRepository;
     }
     public ReferralService()
     {
