@@ -1,0 +1,18 @@
+
+@HostAddress = https://localhost:7251
+
+GET {{HostAddress}}/api/referrals
+Accept: application/json
+
+###
+
+POST {{HostAddress}}/api/referrals
+Accept: application/json
+Content-Type: application/json
+
+{
+    "referee_id" : "566fc9e1-743f-4074-a467-d88d67e7186c",
+    "referral_code" : "mine"
+
+}
+###
