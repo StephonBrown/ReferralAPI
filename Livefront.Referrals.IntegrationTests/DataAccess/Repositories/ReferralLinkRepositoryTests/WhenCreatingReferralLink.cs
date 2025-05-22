@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
-namespace Livefront.Referrals.IntegrationTests.DataAccess.Repositories.LinkRepositoryTests;
+namespace Livefront.Referrals.IntegrationTests.DataAccess.Repositories.ReferralLinkRepositoryTests;
 
 [TestFixture]
 public class WhenCreatingReferralLink : BaseRepositoryTestFixture

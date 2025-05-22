@@ -1,4 +1,4 @@
-namespace Livefront.Referrals.DataAccess.Models.DeeplinkApi;
+namespace Livefront.Referrals.DataAccess.Models.DeeplinkApi.Models;
 
 public class DeepLink
 {

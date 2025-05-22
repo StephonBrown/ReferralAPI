@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Livefront.Referrals.DataAccess.Models.DeeplinkApi.Models;
 
 namespace Livefront.Referrals.DataAccess.Models.DeeplinkApi;
 

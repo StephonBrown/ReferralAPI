@@ -1,5 +1,6 @@
 using System.Net;
 using Livefront.Referrals.DataAccess.Models.DeeplinkApi;
+using Livefront.Referrals.DataAccess.Models.DeeplinkApi.Models;
 using Livefront.Referrals.DataAccess.Services;
 
 namespace Livefront.Referrals.UnitTests.DataAccess.Services.ExternalDeeplinkApiServiceTests;

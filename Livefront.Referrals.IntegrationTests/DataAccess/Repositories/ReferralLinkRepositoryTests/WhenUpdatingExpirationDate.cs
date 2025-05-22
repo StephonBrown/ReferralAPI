@@ -3,7 +3,7 @@ using Livefront.Referrals.DataAccess.Repositories;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
-namespace Livefront.Referrals.IntegrationTests.DataAccess.Repositories.LinkRepositoryTests;
+namespace Livefront.Referrals.IntegrationTests.DataAccess.Repositories.ReferralLinkRepositoryTests;
 
 [TestFixture]
 public class WhenUpdatingExpirationDate : BaseRepositoryTestFixture
