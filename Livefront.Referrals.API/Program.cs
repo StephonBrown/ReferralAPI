@@ -12,7 +12,6 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddControllers();
-        builder.Services.AddOpenApi();
         AddNameHttpClients(builder);
         
         // Configure logging using Serilog Sinks for both the console and a local file
@@ -23,13 +22,7 @@ public class Program
         );
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         var app = builder.Build();
-
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapOpenApi();
-        }
-
+        
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
