@@ -1,6 +1,7 @@
 using Livefront.Referrals.API.Exceptions;
 using Livefront.Referrals.API.Extensions;
 using Livefront.Referrals.API.Models;
+using Livefront.Referrals.DataAccess.Exceptions;
 using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Repositories;
 using Livefront.Referrals.DataAccess.Services;
@@ -25,7 +26,7 @@ public class ReferralLinkService : IReferralLinkService
     }
     
     /// <inheritdoc />
-    public async Task<ReferralLinkDTO> CreateOrGetReferralLink(Guid userId, CancellationToken cancellationToken)
+    public async Task<ReferralLinkDTO?> CreateOrGetReferralLink(Guid userId, CancellationToken cancellationToken)
     {
         if (userId == Guid.Empty)
         {
@@ -40,13 +41,15 @@ public class ReferralLinkService : IReferralLinkService
             throw new UserNotFoundException(userId);
         }
 
-        //Let's check if the referral code exists and return it if it does.
         var referralLink = await referralLinkRepository.GetByUserId(user.Id, cancellationToken);
-        
-        //If it doesn't exist, let's create a new one
         if (referralLink == null)
         {
             var deepLink = await externalDeeplinkApiService.GenerateLink(user.ReferralCode, cancellationToken);
+            if (deepLink == null)
+            {
+                logger.LogWarning("Generated deeplink was not returned");
+                throw new ExternalApiServiceException("Error while creating deep link with external service");
+            }
             logger.LogDebug("Deep link generated. Creating new referral link");
             var newReferralLink = new ReferralLink
             {
@@ -57,16 +60,54 @@ public class ReferralLinkService : IReferralLinkService
                 BaseDeepLink = deepLink.Link
             };
             await referralLinkRepository.Create(newReferralLink, cancellationToken);
-            return newReferralLink.ReferralLinkToReferralLinkDto();
+            return newReferralLink.ToReferralLinkDto();
         }
 
-        return referralLink.ReferralLinkToReferralLinkDto();
+        return referralLink.ToReferralLinkDto();
 
     }
 
     /// <inheritdoc />
-    public async Task<ReferralLinkDTO> ExtendReferralLinkTimeToLive(Guid userId, CancellationToken cancellationToken)
+    public async Task<ReferralLinkDTO?> ExtendReferralLinkTimeToLive(Guid userId, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        if (userId == Guid.Empty)
+        {
+            logger.LogWarning($"User {userId} has not been provided");
+            throw new ArgumentException("User id cannot be empty", nameof(userId));
+        }
+        var user = await userRepository.GetById(userId, cancellationToken);
+        
+        if (user == null)
+        {
+            logger.LogWarning($"User {userId} does not exist");
+            throw new UserNotFoundException(userId);
+        }
+        
+        //Let's check if the referral code exists and return it if it does.
+        var referralLink = await referralLinkRepository.GetByUserId(user.Id, cancellationToken);
+
+        if (referralLink == null)
+        {
+            logger.LogWarning("Referral link for {UserId} could not be found", userId);
+            throw new ReferralLinkNotFoundException(userId);
+        }
+
+        var deepLink = referralLink.ToDeepLink();
+        var updatedDeeplink = await externalDeeplinkApiService.UpdateLinkTimeToLive(deepLink, cancellationToken);
+        if (updatedDeeplink == null)
+        {
+            logger.LogWarning("Deep link update was not returned.");
+            throw new ExternalApiServiceException("Error while updating deep link");
+        }
+        
+        logger.LogDebug("Deep link updated. Updating new referral link");
+        var updatedReferralLink = await referralLinkRepository.UpdateExpirationDate(user.Id, updatedDeeplink.ExpirationDate, cancellationToken);
+
+        if (updatedReferralLink == null)
+        {
+            logger.LogWarning("Referral link update was not returned.");
+            throw new DataPersistenceException("Error while updating referral link");
+        }
+        return updatedReferralLink.ToReferralLinkDto(); 
     }
 }
