@@ -24,6 +24,8 @@ public class User
     [JsonPropertyName("referral_code")]
     public string ReferralCode { get; init; }
 
+    public User() { }
+
     [method: JsonConstructor]
     public User(Guid id,
         string firstName,
