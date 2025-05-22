@@ -1,31 +1,51 @@
 using System.Net;
 using System.Text.Json;
 using Livefront.Referrals.DataAccess.Services;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using RichardSzalay.MockHttp;
 
 namespace Livefront.Referrals.UnitTests.DataAccess.Services.ExternalDeeplinkApiServiceTests;
 
-public class BaseDeeplinkApiTests
+public class BaseDeeplinkApiTestFixture
 {
-    private IExternalDeeplinkApiService externalDeeplinkApiService;
-    private readonly CancellationToken cancellationToken = CancellationToken.None;
-    private MockHttpMessageHandler mockHttpHandler;
-    private HttpClient mockHttpClient;
-    private static readonly Uri LinkApiBaseAddress = new("https://deeplink-api.com");
+    protected IExternalDeeplinkApiService externalDeeplinkApiService;
+    protected readonly CancellationToken cancellationToken = CancellationToken.None;
+    protected MockHttpMessageHandler mockHttpHandler;
+    protected HttpClient mockHttpClient;
+    protected static readonly Uri LinkApiBaseAddress = new("https://deeplink-api.com");
+    protected ILogger<ExternalDeeplinkApiService> logger = Substitute.For<ILogger<ExternalDeeplinkApiService> >();
     
     
-    private MockedRequest SetExceptionThrowingRequestHandler(HttpMethod httpMethod, Uri endpoint, Exception exception)
+    protected MockedRequest SetExceptionThrowingRequestHandler(HttpMethod httpMethod, Uri endpoint, Exception exception)
     {
         return mockHttpHandler
             .Expect(httpMethod, endpoint.AbsoluteUri)
             .Throw(exception);
     }
-    private MockedRequest SetRequestHandler<TResponse, TRequest>(TResponse response, TRequest request, HttpStatusCode responseCode, HttpMethod httpMethod, Uri endpoint)
+    
+    protected MockedRequest SetRequestHandler<TResponse, TRequest>(TResponse response, TRequest? request, HttpStatusCode responseCode, HttpMethod httpMethod, Uri endpoint)
     {
         var responseJson = JsonSerializer.Serialize(response);
+
+        if (request == null)
+        { 
+            return mockHttpHandler
+            .Expect(httpMethod, endpoint.AbsoluteUri)
+            .Respond(responseCode,"application/json",responseJson);
+        }
         return mockHttpHandler
             .Expect(httpMethod, endpoint.AbsoluteUri)
             .WithJsonContent(request)
             .Respond(responseCode,"application/json",responseJson);
+    }
+    
+    protected void CreateMockHttpHandlerAndHttpClient()
+    {
+        mockHttpHandler  = new MockHttpMessageHandler();
+        mockHttpClient = new HttpClient(mockHttpHandler)
+        {
+            BaseAddress = LinkApiBaseAddress
+        };
     }
 }

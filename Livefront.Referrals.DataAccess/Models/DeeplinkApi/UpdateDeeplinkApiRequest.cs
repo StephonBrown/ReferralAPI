@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Livefront.Referrals.DataAccess.Models.DeeplinkApiRequests;
+namespace Livefront.Referrals.DataAccess.Models.DeeplinkApi;
 
 public class UpdateDeeplinkApiRequest
 {

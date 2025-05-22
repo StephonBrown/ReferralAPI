@@ -1,14 +1,21 @@
 using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Repositories;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 
 namespace Livefront.Referrals.IntegrationTests.DataAccess.Repositories.LinkRepositoryTests;
 
-public class WhenTestingGetByUserId : BaseReferralLinkRepositoryTestFixture
+[TestFixture]
+public class WhenGettingByUserId : BaseRepositoryTestFixture
 {
+    private IReferralLinkRepository referralLinkRepository;
+    private ILogger<IReferralLinkRepository> logger = Substitute.For<ILogger<IReferralLinkRepository>>();
+
+    
     [SetUp]
     public async Task SetUp()
     {
-        await CreateDatabaseContext();
+        await ConfigureDbContextAsync();
         referralLinkRepository = new ReferralLinkRepository(dbContext, logger);
     }
     
@@ -19,18 +26,28 @@ public class WhenTestingGetByUserId : BaseReferralLinkRepositoryTestFixture
         var referralLink = new ReferralLink
         {
             UserId = Guid.NewGuid(),
-            BaseDeepLink = "https://generated-link.com",
+            BaseDeepLink = "https://generated-link.com/AAAA",
             DateCreated = DateTime.UtcNow,
             ExpirationDate = DateTime.UtcNow.AddDays(30),
             ThirdPartyId = 50
         };
+        var referralLink2 = new ReferralLink
+        {
+            UserId = Guid.NewGuid(),
+            BaseDeepLink = "https://generated-link.com/BBBB",
+            DateCreated = DateTime.UtcNow,
+            ExpirationDate = DateTime.UtcNow.AddDays(25),
+            ThirdPartyId = 13
+        };
         await referralLinkRepository.Create(referralLink, cancellationToken);
-        
+        await referralLinkRepository.Create(referralLink2, cancellationToken);
+
+
         //Act
         var returnedReferralLink = await referralLinkRepository.GetByUserId(referralLink.UserId, cancellationToken);
-        Console.WriteLine(returnedReferralLink);
+        
         //Assert
-        Assert.That(returnedReferralLink.Id, Is.Not.EqualTo(Guid.Empty));
+        Assert.That(returnedReferralLink?.Id, Is.Not.EqualTo(Guid.Empty));
         Assert.That(returnedReferralLink.BaseDeepLink, Is.EqualTo(referralLink.BaseDeepLink));
         Assert.That(returnedReferralLink.DateCreated,Is.EqualTo(referralLink.DateCreated));
         Assert.That(returnedReferralLink.UserId, Is.EqualTo(referralLink.UserId));
@@ -41,7 +58,8 @@ public class WhenTestingGetByUserId : BaseReferralLinkRepositoryTestFixture
     public void GivenInvalidUserId_ThenThrowsArgumentException()
     {
         //Arrange/Act/Assert
-        Assert.ThrowsAsync<ArgumentException>(async () => await referralLinkRepository.GetByUserId(Guid.Empty, cancellationToken));
+        var exception = Assert.ThrowsAsync<ArgumentException>(async () => await referralLinkRepository.GetByUserId(Guid.Empty, cancellationToken));
+        Assert.That(exception.ParamName, Is.EqualTo("userId"));
     }
     
     [TearDown]
@@ -49,4 +67,5 @@ public class WhenTestingGetByUserId : BaseReferralLinkRepositoryTestFixture
     {
         CleanUp();
     }
+
 }

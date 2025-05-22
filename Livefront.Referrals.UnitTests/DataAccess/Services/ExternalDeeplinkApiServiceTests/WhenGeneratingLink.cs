@@ -1,58 +1,60 @@
 using System.Net;
-using System.Text.Json;
-using Livefront.Referrals.DataAccess.Models;
+
+using Livefront.Referrals.DataAccess.Exceptions;
+using Livefront.Referrals.DataAccess.Models.DeeplinkApi;
 using Livefront.Referrals.DataAccess.Services;
-using Livefront.Referrals.DataAccess.Services.Configurations;
-using RichardSzalay.MockHttp;
 
 namespace Livefront.Referrals.UnitTests.DataAccess.Services.ExternalDeeplinkApiServiceTests;
 
 [TestFixture]
-public class When_GenerateLink
+public class WhenGeneratingLink : BaseDeeplinkApiTestFixture
 {
-    private IExternalDeeplinkApiService externalDeeplinkApiService;
-    private MockHttpMessageHandler mockHttpMessageHandler;
-    private CancellationToken cancellationToken = CancellationToken.None;
+    private static readonly Uri LinkGenerationUri = new(LinkApiBaseAddress, DeeplinkApiConstants.LinkGenerationEndpoint);
     private string referralCode;
     private string linkChannel;
 
     [SetUp]
-    public void SetUp()
+    public void Setup()
     {
-        mockHttpMessageHandler = new MockHttpMessageHandler();
-        var mockHttpClient = new HttpClient(mockHttpMessageHandler)
-        {
-            BaseAddress = new Uri("https://deeplink-api.com/")
-        };
-        externalDeeplinkApiService = new ExternalDeeplinkApiService(mockHttpClient);
+        CreateMockHttpHandlerAndHttpClient();
+        externalDeeplinkApiService = new ExternalDeeplinkApiService(mockHttpClient, logger);
     }
-
+    
     [Test]
     public async Task GoldenPath()
     {
         //Arrange
         referralCode = "IREFERREDYOU";
         linkChannel = "SMS";
+        var createLinkRequest = new CreateDeeplinkApiRequest(referralCode, linkChannel);
+        var deepLink = new DeepLink( 
+            1,
+            DateTime.UtcNow, 
+            DateTime.UtcNow.AddDays(1), 
+            "https://generated-link.com?channel=default");
 
-        var referralLink = new ReferralLink(1, DateTime.Now, new Uri("https://generated-link.com?channel=default"));
-        
-        var request = new ExternalDeeplinkApiRequest(referralCode, linkChannel);
-        var responseStringContent = CreateApiResponse(referralLink);
-        var mockedRequest = CreateMockedRequest(request, HttpStatusCode.OK, responseStringContent);
+        var mockedRequestEndpoint =
+            SetRequestHandler(deepLink,
+                createLinkRequest,
+                HttpStatusCode.OK,
+                HttpMethod.Post,
+                LinkGenerationUri);
         
         //Act
-        var generatedLink =
-            await externalDeeplinkApiService.GenerateLink(referralCode, linkChannel, cancellationToken);
+        var generatedLink = await externalDeeplinkApiService.GenerateLink(referralCode, linkChannel, cancellationToken);
 
         //Assert
-        Assert.That(generatedLink?.Id, Is.EqualTo(referralLink.Id));
-        Assert.That(generatedLink?.DateCreated, Is.EqualTo(referralLink.DateCreated));
-        Assert.That(generatedLink?.Link, Is.EqualTo(referralLink.Link));
-        Assert.That(mockHttpMessageHandler.GetMatchCount(mockedRequest), Is.EqualTo(1));
+        Assert.That(generatedLink?.Id, Is.EqualTo(deepLink.Id));
+        Assert.That(generatedLink?.DateCreated, Is.EqualTo(deepLink.DateCreated));
+        Assert.That(generatedLink?.Id, Is.EqualTo(deepLink.Id));
+        Assert.That(generatedLink?.ExpirationDate, Is.EqualTo(deepLink.ExpirationDate));
+        Assert.That(generatedLink?.Link, Is.EqualTo(deepLink.Link));
+        Assert.That(mockHttpHandler.GetMatchCount(mockedRequestEndpoint), Is.EqualTo(1));
+        mockHttpHandler.VerifyNoOutstandingExpectation();
     }
 
     [Test]
-    public async Task GivenInvalidReferralCode_ThenThrowArgumentException()
+    public void GivenInvalidReferralCode_ThenThrowArgumentException()
     {
         //Arrange
         referralCode = "";
@@ -64,36 +66,44 @@ public class When_GenerateLink
     }
     
     [Test]
-    public async Task GivenInvalidChannel_ThenThrowArgumentException()
+    public void GivenInvalidChannel_ThenThrowArgumentException()
     {
         //Arrange
         referralCode = "IREFERREDYOU";
         linkChannel = "";
-
+        
         //Act/Assert
         var exception = Assert.ThrowsAsync<ArgumentException>(async () => await externalDeeplinkApiService.GenerateLink(referralCode, linkChannel, cancellationToken));
         Assert.That(exception.ParamName, Is.EqualTo("referralCode"));
     }
-
-    private MockedRequest CreateMockedRequest(ExternalDeeplinkApiRequest request, HttpStatusCode responseCode,
-        StringContent responseContent)
+    
+    [Test]
+    public void GivenFailedGenerationOfCode_ThenThrowAExternalApiServiceException()
     {
-        var mockedRequest = mockHttpMessageHandler
-            .When($"https://deeplink-api.com/{DeeplinkApiConstants.DeeplinkGenerationUri}")
-            .WithJsonContent(JsonSerializer.Serialize(request))
-            .Respond(responseCode, responseContent);
-        return mockedRequest;
+        //Arrange
+        referralCode = "IREFERREDYOU";
+        linkChannel = "SMS";
+        
+        var mockedRequestEndpoint =
+            SetExceptionThrowingRequestHandler(
+                HttpMethod.Post,
+                LinkGenerationUri,
+        new HttpRequestException());
+        
+        //Act/Assert
+        var exception = Assert.ThrowsAsync<ExternalApiServiceException>(async () => await externalDeeplinkApiService.GenerateLink(referralCode, linkChannel, cancellationToken));
+        Assert.That(exception, Is.TypeOf<ExternalApiServiceException>());
+        Assert.That(exception.InnerException, Is.TypeOf<HttpRequestException>());
+        Assert.That(mockHttpHandler.GetMatchCount(mockedRequestEndpoint), Is.EqualTo(1));
     }
+    
 
-    private StringContent CreateApiResponse(ReferralLink referralLink)
-    {
-        return new StringContent(JsonSerializer.Serialize(referralLink));
-    }
 
     [TearDown]
     public void TearDown()
     {
-        mockHttpMessageHandler.Dispose();
+        mockHttpClient.Dispose();
+        mockHttpHandler.Dispose();
         referralCode = string.Empty;
         linkChannel = string.Empty;
     }

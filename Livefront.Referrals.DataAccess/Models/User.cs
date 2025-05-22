@@ -1,19 +1,40 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
-namespace Livefront.Referrals.API.Models;
+namespace Livefront.Referrals.DataAccess.Models;
 
-[method: JsonConstructor]
-public class User(
-    Guid id,
-    string firstName,
-    string lastName,
-    string email,
-    string referralCode
-)
+[Table("Users")]
+public class User
 {
-    [JsonPropertyName("id")] public Guid Id { get; init; } = id;
-    [JsonPropertyName("first_name")] public string FirstName { get; init; } = firstName;
-    [JsonPropertyName("last_name")] public string LastName { get; init; } = lastName;
-    [JsonPropertyName("email")] public string Email { get; init; } = email;
-    [JsonPropertyName("referral_code")] public string ReferralCode { get; init; } = referralCode;
+    [JsonPropertyName("id")] public Guid Id { get; set; }
+
+    [Required]
+    [JsonPropertyName("first_name")]
+    public string FirstName { get; init; }
+
+    [Required]
+    [JsonPropertyName("last_name")]
+    public string LastName { get; init; }
+
+    [Required] [JsonPropertyName("email")] public string Email { get; init; }
+
+    [Required]
+    [JsonPropertyName("referral_code")]
+    public string ReferralCode { get; init; }
+
+    [method: JsonConstructor]
+    public User(Guid id,
+        string firstName,
+        string lastName,
+        string email,
+        string referralCode)
+    {
+        Id = id;
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        ReferralCode = referralCode;
+    }
 }

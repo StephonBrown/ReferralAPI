@@ -21,4 +21,9 @@
         <Using Include="NUnit.Framework"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="API\ReferralControllerTests\" />
+      <Folder Include="API\ReferralLinkControllerTests\" />
+    </ItemGroup>
+
 </Project>

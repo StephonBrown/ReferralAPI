@@ -1,7 +1,6 @@
-namespace Livefront.Referrals.API.Models;
+namespace Livefront.Referrals.DataAccess.Models;
 
 public enum ReferralStatus
 {
-    Pending,
     Complete
 }

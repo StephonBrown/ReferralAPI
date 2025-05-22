@@ -1,8 +1,10 @@
-using Livefront.Referrals.DataAccess.Models;
+using Livefront.Referrals.DataAccess.Models.DeeplinkApi;
 
 namespace Livefront.Referrals.DataAccess.Services;
 
-public interface IDeeplinkApiService
+public interface IExternalDeeplinkApiService
 {
-    Task<ReferralLink> GenerateLink(string referralCode, string channel);
+    Task<DeepLink?> GenerateLink(string referralCode, string channel, CancellationToken cancellationToken);
+    Task<DeepLink?> UpdateLinkTimeToLive(DeepLink? deepLink, CancellationToken cancellationToken);
+    Task<DeepLink?> DeleteLink(DeepLink? deepLink, CancellationToken cancellationToken);
 }
