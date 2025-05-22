@@ -21,19 +21,7 @@ public class ReferralLinkService : IReferralLinkService
     }
     
     /// <inheritdoc />
-    public async Task<ReferralLinkDTO> CreateOrRetrieveReferralLink(Guid userId)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public async Task<ReferralLinkDTO> GetReferralLinkByReferralCode(string referralCode)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public async Task DeleteReferralLink(Guid userId)
+    public async Task<ReferralLinkDTO> CreateOrGetReferralLink(Guid userId)
     {
         throw new NotImplementedException();
     }
