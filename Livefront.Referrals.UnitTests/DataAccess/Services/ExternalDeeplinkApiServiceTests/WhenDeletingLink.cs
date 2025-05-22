@@ -8,8 +8,6 @@ namespace Livefront.Referrals.UnitTests.DataAccess.Services.ExternalDeeplinkApiS
 [TestFixture]
 public class WhenDeletingLink : BaseDeeplinkApiTestFixture
 {
-    public class WhenGeneratingLink : BaseDeeplinkApiTestFixture
-    {
         private static readonly Uri LinkDeleteEndpoint =
             new(LinkApiBaseAddress, DeeplinkApiConstants.DeleteLinkEndpoint);
 
@@ -109,5 +107,4 @@ public class WhenDeletingLink : BaseDeeplinkApiTestFixture
             mockHttpClient.Dispose();
             mockHttpHandler.Dispose();
         }
-    }
 }

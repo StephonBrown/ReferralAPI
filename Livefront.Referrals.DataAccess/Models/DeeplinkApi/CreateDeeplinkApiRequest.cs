@@ -6,12 +6,9 @@ public class CreateDeeplinkApiRequest
 {
     [JsonPropertyName("referral_code")]
     public string UserReferralCode { get; set; }
-    [JsonPropertyName("channel")]
-    public string Channel { get; set; }
 
-    public CreateDeeplinkApiRequest(string userReferralCode, string channel)
+    public CreateDeeplinkApiRequest(string userReferralCode)
     {
         UserReferralCode = userReferralCode;
-        Channel = channel;
     }
 }
