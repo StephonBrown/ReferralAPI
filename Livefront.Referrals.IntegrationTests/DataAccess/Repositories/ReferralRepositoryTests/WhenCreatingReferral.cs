@@ -16,7 +16,7 @@ public class WhenCreatingReferral : BaseRepositoryTestFixture
     public async Task SetUp()
     {
         await ConfigureDbContextAsync();
-        referralRepository = new Referrals.DataAccess.Repositories.ReferralRepository(dbContext, logger);
+        referralRepository = new ReferralRepository(dbContext, logger);
     }
     
     [Test]
@@ -32,7 +32,8 @@ public class WhenCreatingReferral : BaseRepositoryTestFixture
             DateCreated = DateTime.UtcNow,
             RefereeId = referee,
             ReferrerId = referrer,
-            Status = ReferralStatus.Complete
+            Status = ReferralStatus.Complete,
+            ReferralCode = "acodeforyou"
         };
         
         //Act
@@ -59,7 +60,8 @@ public class WhenCreatingReferral : BaseRepositoryTestFixture
             DateCreated = DateTime.UtcNow,
             RefereeId = referee,
             ReferrerId = referrer,
-            Status = ReferralStatus.Complete
+            Status = ReferralStatus.Complete,
+            ReferralCode = "acodeforyou"
         };
         
         var referral2 = new Referral
@@ -67,7 +69,8 @@ public class WhenCreatingReferral : BaseRepositoryTestFixture
             DateCreated = DateTime.UtcNow.AddDays(5),
             RefereeId = referee,
             ReferrerId = referrer,
-            Status = ReferralStatus.Complete
+            Status = ReferralStatus.Complete,
+            ReferralCode = "acodeforyou"
         };
         
         //Act
@@ -90,7 +93,8 @@ public class WhenCreatingReferral : BaseRepositoryTestFixture
             DateCreated = DateTime.UtcNow,
             RefereeId = referee,
             ReferrerId = referrer,
-            Status = ReferralStatus.Complete
+            Status = ReferralStatus.Complete,
+            ReferralCode = "acodeforyou"
         };
         
         //Act/Assert
@@ -111,7 +115,8 @@ public class WhenCreatingReferral : BaseRepositoryTestFixture
             DateCreated = DateTime.UtcNow,
             RefereeId = referee,
             ReferrerId = referrer,
-            Status = ReferralStatus.Complete
+            Status = ReferralStatus.Complete,
+            ReferralCode = "acodeforyou"
         };
         
         //Act/Assert
@@ -132,7 +137,8 @@ public class WhenCreatingReferral : BaseRepositoryTestFixture
             DateCreated = default,
             RefereeId = referee,
             ReferrerId = referrer,
-            Status = ReferralStatus.Complete
+            Status = ReferralStatus.Complete,
+            ReferralCode = "acodeforyou"
         };
         
         //Act/Assert
