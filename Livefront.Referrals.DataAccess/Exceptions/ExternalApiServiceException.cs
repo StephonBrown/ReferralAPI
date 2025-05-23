@@ -5,7 +5,7 @@ namespace Livefront.Referrals.DataAccess.Exceptions;
 public class ExternalApiServiceException : Exception
 {
     public HttpStatusCode? HttpStatusCode { get; }
-    public string ApiResponseContent { get; }
+    public string? ApiResponseContent{ get; }
     
     public ExternalApiServiceException(string message) : base(message)
     {
