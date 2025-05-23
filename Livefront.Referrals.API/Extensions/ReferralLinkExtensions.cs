@@ -6,17 +6,27 @@ namespace Livefront.Referrals.API.Extensions;
 
 public static class ReferralLinkExtensions
 {
-    public static ReferralLinkDTO ToReferralLinkDto(this ReferralLink referralLink)
+    public static ReferralLinkDTO? ToReferralLinkDto(this ReferralLink? referralLink)
     {
-        return new ReferralLinkDTO()
+        if(referralLink == null)
+        {
+            return null;
+        }
+        
+        return new ReferralLinkDTO
         {
             ReferralLink = referralLink.BaseDeepLink,
             ExpirationDate = referralLink.ExpirationDate,
         };
     }
     
-    public static DeepLink ToDeepLink(this ReferralLink referralLink)
+    public static DeepLink? ToDeepLink(this ReferralLink? referralLink)
     {
+        if(referralLink == null)
+        {
+            return null;
+        }
+        
         return new DeepLink
         {
             Id = referralLink.ThirdPartyId,
