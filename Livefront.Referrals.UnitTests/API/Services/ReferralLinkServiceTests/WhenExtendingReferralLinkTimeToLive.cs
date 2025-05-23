@@ -36,6 +36,7 @@ public class WhenExtendingReferralLinkTimeToLive : BaseReferralLinkServiceTestFi
             Email = "john.doe@example.com",
             ReferralCode = "THISISMYCODE"
         };
+        
         var referralLink = new ReferralLink()
         {
             Id = Guid.NewGuid(),
@@ -190,5 +191,14 @@ public class WhenExtendingReferralLinkTimeToLive : BaseReferralLinkServiceTestFi
         await ThenReferralLinkRepositoryGetByUserIdShouldBeCalled(userId, 1);
         await ThenExternalDeeplinkApiServiceShouldBeCalled(thirdPartyId, dateCreated, dateExpires, link, 1);
 
+    }
+    
+    [TearDown]
+    public void TearDown()
+    {
+        mockedReferralLinkRepository.ClearReceivedCalls();
+        mockedUserRepository.ClearReceivedCalls();
+        mockedExternalDeeplinkApiService.ClearReceivedCalls();
+        mockedLogger.ClearReceivedCalls();
     }
 }
