@@ -6,7 +6,4 @@ riderModule.iml
 *.log
 
 Livefront.ReferralAPI.sln.DotSettings.user
-
-.idea/.idea.Livefront.ReferralAPI/.idea/indexLayout.xml
-
-.idea/.idea.Livefront.ReferralAPI/.idea/vcs.xml
+.idea/.idea.Livefront.ReferralAPI/.idea/*
