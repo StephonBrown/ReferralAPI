@@ -21,7 +21,7 @@ public class ReferralService : IReferralService
     }
     
     /// <inheritdoc />
-    public async Task<IEnumerable<ReferralDTO>> GetReferralsByUserId(Guid userId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<ReferralDTO>> GetReferralsByReferrerUserId(Guid userId, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
