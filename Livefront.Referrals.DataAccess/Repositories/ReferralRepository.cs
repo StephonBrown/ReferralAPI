@@ -16,16 +16,20 @@ public class ReferralRepository : IReferralRepository
         this.referralsContext = referralsContext;
         this.logger = logger;
     }
+    
+    /// <inheritdoc />
     public async Task<Referral> GetById(Guid referralId, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
-
+    
+    /// <inheritdoc />
     public async Task<IEnumerable<Referral>> GetReferralsByReferrerId(Guid userId, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
-
+    
+    /// <inheritdoc />
     public async Task<Referral> Create(Referral referral, CancellationToken cancellationToken)
     {
         ValidateReferral(referral);
@@ -55,8 +59,9 @@ public class ReferralRepository : IReferralRepository
             contextualLogger.Error(e, "Failed to create a referral");
             throw new DataPersistenceException("Failed to create a referral", e);
         }    }
-
-    public async Task<Referral> Delete(Referral referral, CancellationToken cancellationToken)
+    
+    /// <inheritdoc />
+    public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
@@ -85,6 +90,12 @@ public class ReferralRepository : IReferralRepository
         {
             logger.LogWarning("DateCreated is invalid");
             throw new ArgumentException("DateCreated is invalid", nameof(referral));
+        }
+        
+        if(string.IsNullOrWhiteSpace(referral.ReferralCode))
+        {
+            logger.LogWarning("ReferralCode is invalid");
+            throw new ArgumentException("ReferralCode is invalid", nameof(referral));
         }
         
     }
