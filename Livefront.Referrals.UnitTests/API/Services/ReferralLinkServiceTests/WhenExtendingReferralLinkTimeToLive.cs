@@ -65,7 +65,7 @@ public class WhenExtendingReferralLinkTimeToLive : BaseReferralLinkServiceTestFi
         GivenUserRepositoryGetByUserIdReturnsUser(user);
         GivenReferralLinkRepositoryGetByUserIdReturnsReferralLink(referralLink);
         GivenExternalDeeplinkApiServiceUpdateLinkTimeToLiveReturnsDeeplink(updatedDeepLink);
-        GivenReferralLinkRepositoryUpdatExpirationDateReturnsReferralLink(updatedReferralLink);
+        GivenReferralLinkRepositoryUpdateExpirationDateReturnsReferralLink(updatedReferralLink);
 
         //Act
         var returnedReferralLinkDto = await referralLinkService.ExtendReferralLinkTimeToLive(userId, cancellationToken);

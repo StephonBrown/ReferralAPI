@@ -2,11 +2,7 @@ using Livefront.Referrals.API.Exceptions;
 using Livefront.Referrals.API.Services;
 using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Models.DeeplinkApi.Models;
-using Livefront.Referrals.DataAccess.Repositories;
-using Livefront.Referrals.DataAccess.Services;
-using Microsoft.Extensions.Logging;
 using NSubstitute;
-using NSubstitute.ReturnsExtensions;
 
 namespace Livefront.Referrals.UnitTests.API.Services.ReferralLinkServiceTests;
 
