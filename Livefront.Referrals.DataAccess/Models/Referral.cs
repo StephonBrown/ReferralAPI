@@ -19,6 +19,7 @@ public class Referral
     public ReferralStatus Status { get; init; }
     [Required]
     public DateTime DateCreated { get; init; }
-
-
+    [Required]
+    public string ReferralCode { get; init; }
+    
 }
