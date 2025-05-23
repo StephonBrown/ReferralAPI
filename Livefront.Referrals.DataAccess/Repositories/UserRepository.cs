@@ -16,19 +16,29 @@ public class UserRepository : IUserRepository
     }
 
     /// <inheritdoc />
-    public async Task<User> GetById(Guid userId, CancellationToken cancellationToken)
+    public async Task<User?> GetById(Guid userId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> ExistsById(Guid userId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> ExistsByReferralCode(string referralCode, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc />
-    public async Task<string> GetReferralCodeByUserId(Guid userId, CancellationToken cancellationToken)
+    public async Task<string?> GetReferralCodeByUserId(Guid userId, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc />
-    public async Task<User> GetUserByReferralCode(string referralCode, CancellationToken cancellationToken)
+    public async Task<User?> GetUserByReferralCode(string referralCode, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
