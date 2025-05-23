@@ -1,7 +1,7 @@
-using Livefront.Referrals.API.Models;
+using Livefront.BusinessLogic.Models;
 using Livefront.Referrals.DataAccess.Models;
 
-namespace Livefront.Referrals.API.Extensions;
+namespace Livefront.BusinessLogic.Extensions;
 
 public static class ReferralExtensions
 {

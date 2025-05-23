@@ -1,12 +1,14 @@
-using Livefront.Referrals.API.Exceptions;
+using Livefront.BusinessLogic.Exceptions;
 using Livefront.Referrals.API.Extensions;
 using Livefront.Referrals.API.Models;
+using Livefront.Referrals.API.Services;
 using Livefront.Referrals.DataAccess.Exceptions;
 using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Repositories;
 using Livefront.Referrals.DataAccess.Services;
+using Microsoft.Extensions.Logging;
 
-namespace Livefront.Referrals.API.Services;
+namespace Livefront.BusinessLogic.Services;
 
 public class ReferralLinkService : IReferralLinkService
 {

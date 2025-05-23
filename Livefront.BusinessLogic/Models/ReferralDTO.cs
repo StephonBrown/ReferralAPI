@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using Livefront.Referrals.DataAccess.Models;
 
-namespace Livefront.Referrals.API.Models;
+namespace Livefront.BusinessLogic.Models;
 
 public class ReferralDTO
 {

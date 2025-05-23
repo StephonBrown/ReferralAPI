@@ -1,3 +1,4 @@
+using Livefront.BusinessLogic.Models;
 using Livefront.Referrals.API.Models;
 
 namespace Livefront.Referrals.API.Services;
