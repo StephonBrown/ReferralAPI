@@ -9,23 +9,13 @@ using NSubstitute.ReturnsExtensions;
 
 namespace Livefront.Referrals.UnitTests.API.Services.ReferralLinkServiceTests;
 
-public class BaseReferralLinkServiceTestFixture
+public class BaseReferralLinkServiceTestFixture : BaseServiceTestFixture
 {
     protected IExternalDeeplinkApiService mockedExternalDeeplinkApiService =
         Substitute.For<IExternalDeeplinkApiService>();
-
     protected IReferralLinkRepository mockedReferralLinkRepository = Substitute.For<IReferralLinkRepository>();
-    protected IUserRepository mockedUserRepository = Substitute.For<IUserRepository>();
     protected ILogger<IReferralLinkService> mockedLogger = Substitute.For<ILogger<IReferralLinkService>>();
-    protected CancellationToken cancellationToken = CancellationToken.None;
     protected IReferralLinkService referralLinkService;
-    protected void GivenUserRepositoryGetByIdReturnsNull()
-    {
-        mockedUserRepository
-            .GetById(Arg.Any<Guid>(), 
-                Arg.Any<CancellationToken>())
-            .ReturnsNull();
-    }
 
     protected void GivenReferralLinkRepositoryGetByUserIdReturnsNull()
     {
@@ -55,14 +45,6 @@ public class BaseReferralLinkServiceTestFixture
                 Arg.Is<CancellationToken>(ct => ct == cancellationToken ));
     }
 
-    protected async Task ThenUserRepositoryGetByIdShouldBeCalled(Guid userId,  int numberOfCalls)
-    {
-        await mockedUserRepository
-            .Received(numberOfCalls)
-            .GetById(Arg.Is<Guid>( id => id == userId ), 
-                Arg.Is<CancellationToken>(ct => ct == cancellationToken ));
-    }
-
     protected void GivenExternalDeeplinkApiServiceUpdateLinkTimeToLiveReturnsNull()
     {
         mockedExternalDeeplinkApiService.UpdateLinkTimeToLive(
@@ -78,14 +60,7 @@ public class BaseReferralLinkServiceTestFixture
                 Arg.Any<CancellationToken>())
             .Returns(referralLink);
     }
-
-    protected void GivenUserRepositoryGetByUserIdReturnsUser(User user)
-    {
-        mockedUserRepository
-            .GetById(Arg.Any<Guid>(), 
-                Arg.Any<CancellationToken>())
-            .Returns(user);
-    }
+    
     protected void GivenExternalDeeplinkApiServiceUpdateLinkTimeToLiveReturnsDeeplink(DeepLink updatedDeepLink)
     {
         mockedExternalDeeplinkApiService.UpdateLinkTimeToLive(
@@ -106,7 +81,7 @@ public class BaseReferralLinkServiceTestFixture
                 Arg.Is<CancellationToken>(ct => ct == cancellationToken ));
     }
 
-    protected void GivenReferralLinkRepositoryUpdatExpirationDateReturnsReferralLink(ReferralLink updatedReferralLink)
+    protected void GivenReferralLinkRepositoryUpdateExpirationDateReturnsReferralLink(ReferralLink updatedReferralLink)
     {
         mockedReferralLinkRepository
             .UpdateExpirationDate(Arg.Any<Guid>(), 
@@ -114,7 +89,6 @@ public class BaseReferralLinkServiceTestFixture
                 Arg.Any<CancellationToken>())
             .Returns(updatedReferralLink);
     }
-    
     
     protected async Task ThenReferralLinkRepositoryCreateShouldBeCalled(ReferralLink referralLink, int numberOfCalls)
     {
