@@ -30,7 +30,7 @@ public class ReferralLinkService : IReferralLinkService
     {
         var user = await ValidateUserIdAndReturnUser(userId, cancellationToken);
 
-        var referralLink = await referralLinkRepository.GetByUserId(user.Id, cancellationToken);
+        var referralLink = await referralLinkRepository.GetByUserId(user!.Id, cancellationToken);
         
         if (referralLink == null)
         {
@@ -52,7 +52,12 @@ public class ReferralLinkService : IReferralLinkService
                 BaseDeepLink = deepLink.Link
             };
             
-            await referralLinkRepository.Create(newReferralLink, cancellationToken);
+            var createdLink = await referralLinkRepository.Create(newReferralLink, cancellationToken);
+            if (createdLink == null)
+            {
+                logger.LogWarning("Referral link creation was not returned for user {UserId}", userId);
+                throw new DataPersistenceException("Error while creating referral link");
+            }
             
             logger.LogDebug("Referral link created for user {UserId}", userId);
             return newReferralLink.ToReferralLinkDto();

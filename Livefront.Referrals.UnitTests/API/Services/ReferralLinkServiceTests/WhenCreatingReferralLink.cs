@@ -1,5 +1,6 @@
 using Livefront.Referrals.API.Exceptions;
 using Livefront.Referrals.API.Services;
+using Livefront.Referrals.DataAccess.Exceptions;
 using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Models.DeeplinkApi.Models;
 using NSubstitute;
@@ -63,7 +64,7 @@ public class WhenCreatingReferralLink : BaseReferralLinkServiceTestFixture
 
         //Assert
         Assert.That(newReferralLink, Is.Not.Null);
-        Assert.That(newReferralLink.ReferralLink, Is.EqualTo(referralLink.BaseDeepLink));
+        Assert.That(newReferralLink!.ReferralLink, Is.EqualTo(referralLink.BaseDeepLink));
         Assert.That(newReferralLink.ExpirationDate, Is.EqualTo(referralLink.ExpirationDate));
         
         await ThenUserRepositoryGetByIdShouldBeCalled(userId, 1);
@@ -72,13 +73,7 @@ public class WhenCreatingReferralLink : BaseReferralLinkServiceTestFixture
         await ThenExternalDeeplinkApiServiceGenerateLinkShouldBeCalled(user, 1);
     }
 
-    private async Task ThenExternalDeeplinkApiServiceGenerateLinkShouldBeCalled(User user, int numberOfCalls)
-    {
-        await mockedExternalDeeplinkApiService
-            .Received(numberOfCalls)
-            .GenerateLink(
-                Arg.Is<string>(referralCode => referralCode == user.ReferralCode), cancellationToken);
-    }
+
     
     [Test]
     public async Task GivenReferralLinkDoesExist_ThenReturnReferralLink()
@@ -114,7 +109,7 @@ public class WhenCreatingReferralLink : BaseReferralLinkServiceTestFixture
 
         //Assert
         Assert.That(newReferralLink, Is.Not.Null);
-        Assert.That(newReferralLink.ReferralLink, Is.EqualTo(referralLink.BaseDeepLink));
+        Assert.That(newReferralLink!.ReferralLink, Is.EqualTo(referralLink.BaseDeepLink));
         Assert.That(newReferralLink.ExpirationDate, Is.EqualTo(referralLink.ExpirationDate));
         
         await ThenUserRepositoryGetByIdShouldBeCalled(userId, 1);
@@ -140,6 +135,65 @@ public class WhenCreatingReferralLink : BaseReferralLinkServiceTestFixture
         
         //Act/Assert
         var exception = Assert.ThrowsAsync<ArgumentException>(async () =>  await referralLinkService.CreateReferralLink(userId, cancellationToken));
-        Assert.That(exception.ParamName, Is.EqualTo("userId"));
+        Assert.That(exception!.ParamName, Is.EqualTo("userId"));
     }
+
+    [Test]
+    public async Task GivenReferralLinkDoesNotExists_AndReferralRepositoryCreateCallReturnsNull_ThenThrowDataPersistenceError()
+    {
+        //Arrange
+        var userId = Guid.NewGuid();
+        var thirdPartyId = 1003;
+        var link = "https://my-deeplink.com/";
+
+        var user = new User()
+        {
+            Id = userId,
+            FirstName = "John",
+            LastName = "Doe",
+            Email = "john.doe@example.com",
+            ReferralCode = "THISISMYCODE"
+        };
+
+        var deepLink = new DeepLink
+        {
+            DateCreated = DateTime.UtcNow,
+            Id = thirdPartyId,
+            ExpirationDate = DateTime.UtcNow.AddDays(30),
+            Link = link
+        };
+
+        var referralLink = new ReferralLink()
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            BaseDeepLink = deepLink.Link,
+            DateCreated = deepLink.DateCreated,
+            ExpirationDate = deepLink.ExpirationDate,
+            ThirdPartyId = deepLink.Id
+        };
+        
+        GivenUserRepositoryGetByUserIdReturnsUser(user);
+        GivenReferralLinkRepositoryGetByUserIdReturnsNull();
+        GivenExternalDeeplinkApiServiceGenerateLinkReturnsDeeplink(deepLink);
+        GivenReferralLinkRepositoryCreateReturnsNull();
+        
+        //Act/Assert
+        Assert.ThrowsAsync<DataPersistenceException>(async () =>  await referralLinkService.CreateReferralLink(userId, cancellationToken));
+        
+        await ThenUserRepositoryGetByIdShouldBeCalled(userId, 1);
+        await ThenReferralLinkRepositoryGetByUserIdShouldBeCalled(userId, 1);
+        await ThenReferralLinkRepositoryCreateShouldBeCalled(referralLink, 1);
+        await ThenExternalDeeplinkApiServiceGenerateLinkShouldBeCalled(user, 1);
+    }
+    
+    [TearDown]
+    public void TearDown()
+    {
+        mockedReferralLinkRepository.ClearReceivedCalls();
+        mockedUserRepository.ClearReceivedCalls();
+        mockedExternalDeeplinkApiService.ClearReceivedCalls();
+        mockedLogger.ClearReceivedCalls();
+    }
+    
 }

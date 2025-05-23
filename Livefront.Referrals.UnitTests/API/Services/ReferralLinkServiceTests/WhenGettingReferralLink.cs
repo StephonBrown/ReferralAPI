@@ -1,6 +1,7 @@
 using Livefront.Referrals.API.Exceptions;
 using Livefront.Referrals.API.Services;
 using Livefront.Referrals.DataAccess.Models;
+using NSubstitute;
 
 namespace Livefront.Referrals.UnitTests.API.Services.ReferralLinkServiceTests;
 
@@ -102,5 +103,14 @@ public class WhenGettingReferralLink : BaseReferralLinkServiceTestFixture
         // Act/Assert
         Assert.ThrowsAsync<UserNotFoundException>(async () =>  await referralLinkService.GetReferralLink(userId, cancellationToken));
         await ThenUserRepositoryGetByIdShouldBeCalled(userId, 1);
+    }
+    
+    [TearDown]
+    public void TearDown()
+    {
+        mockedReferralLinkRepository.ClearReceivedCalls();
+        mockedUserRepository.ClearReceivedCalls();
+        mockedExternalDeeplinkApiService.ClearReceivedCalls();
+        mockedLogger.ClearReceivedCalls();
     }
 }

@@ -97,8 +97,8 @@ public class ReferralLinkRepository : IReferralLinkRepository
             var contextualLogger = Log
                 .ForContext<ReferralLinkRepository>()
                 .ForContext("UserId", userId);
-            contextualLogger.Error(e, "Failed to update expiration of the referral link");
-            throw new DataPersistenceException("Failed to update expiration of the referral link", e);
+            contextualLogger.Error(e, "Failed to delete the referral link");
+            throw new DataPersistenceException("Failed to delete the referral link", e);
         }
         
     }
