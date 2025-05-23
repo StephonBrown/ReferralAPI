@@ -11,7 +11,7 @@ using NSubstitute.ReturnsExtensions;
 namespace Livefront.Referrals.UnitTests.API.Services.ReferralLinkServiceTests;
 
 [TestFixture]
-public class WhenCreatingOrGettingReferralLink : BaseReferralLinkServiceTestFixture
+public class WhenCreatingReferralLink : BaseReferralLinkServiceTestFixture
 {
     [SetUp]
     public void Setup()
@@ -63,7 +63,7 @@ public class WhenCreatingOrGettingReferralLink : BaseReferralLinkServiceTestFixt
         GivenReferralLinkRepositoryCreateReturnsReferralLink(referralLink);
         
         //Act
-        var newReferralLink = await referralLinkService.CreateOrGetReferralLink(userId, cancellationToken);
+        var newReferralLink = await referralLinkService.CreateReferralLink(userId, cancellationToken);
 
         //Assert
         Assert.That(newReferralLink, Is.Not.Null);
@@ -114,7 +114,7 @@ public class WhenCreatingOrGettingReferralLink : BaseReferralLinkServiceTestFixt
         GivenUserRepositoryGetByUserIdReturnsUser(user);
         GivenReferralLinkRepositoryGetByUserIdReturnsReferralLink(referralLink);
         //Act
-        var newReferralLink = await referralLinkService.CreateOrGetReferralLink(userId, cancellationToken);
+        var newReferralLink = await referralLinkService.CreateReferralLink(userId, cancellationToken);
 
         //Assert
         Assert.That(newReferralLink, Is.Not.Null);
@@ -132,7 +132,7 @@ public class WhenCreatingOrGettingReferralLink : BaseReferralLinkServiceTestFixt
         var userId = Guid.NewGuid();
         GivenUserRepositoryGetByIdReturnsNull();
         //Act/Assert
-        Assert.ThrowsAsync<UserNotFoundException>(async () =>  await referralLinkService.CreateOrGetReferralLink(userId, cancellationToken));
+        Assert.ThrowsAsync<UserNotFoundException>(async () =>  await referralLinkService.CreateReferralLink(userId, cancellationToken));
         await ThenUserRepositoryGetByIdShouldBeCalled(userId, 1);
     }
     
@@ -143,7 +143,7 @@ public class WhenCreatingOrGettingReferralLink : BaseReferralLinkServiceTestFixt
         var userId = Guid.Empty;
         
         //Act/Assert
-        var exception = Assert.ThrowsAsync<ArgumentException>(async () =>  await referralLinkService.CreateOrGetReferralLink(userId, cancellationToken));
+        var exception = Assert.ThrowsAsync<ArgumentException>(async () =>  await referralLinkService.CreateReferralLink(userId, cancellationToken));
         Assert.That(exception.ParamName, Is.EqualTo("userId"));
     }
 }
