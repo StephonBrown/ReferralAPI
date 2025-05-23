@@ -111,6 +111,13 @@ public class BaseReferralLinkServiceTestFixture : BaseServiceTestFixture
                 Arg.Any<CancellationToken>())
             .Returns(referralLink);
     }
+    protected void GivenReferralLinkRepositoryCreateReturnsNull()
+    {
+        mockedReferralLinkRepository
+            .Create(Arg.Any<ReferralLink>(),
+                Arg.Any<CancellationToken>())
+            .ReturnsNull();
+    }
 
     protected void GivenExternalDeeplinkApiServiceGenerateLinkReturnsDeeplink(DeepLink deepLink)
     {
@@ -118,5 +125,12 @@ public class BaseReferralLinkServiceTestFixture : BaseServiceTestFixture
                 Arg.Any<string>(), 
                 Arg.Any<CancellationToken>())
             .Returns(deepLink);
+    }
+    protected async Task ThenExternalDeeplinkApiServiceGenerateLinkShouldBeCalled(User user, int numberOfCalls)
+    {
+        await mockedExternalDeeplinkApiService
+            .Received(numberOfCalls)
+            .GenerateLink(
+                Arg.Is<string>(referralCode => referralCode == user.ReferralCode), cancellationToken);
     }
 }
