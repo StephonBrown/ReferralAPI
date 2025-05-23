@@ -14,10 +14,10 @@ public interface IReferralService
     /// <param name="cancellationToken"> cancellation token to cancel the operation or timeout </param> 
     /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ReferralDTO"/> representing the referrals.</returns>
     /// <exception cref="ArgumentException">Thrown when the userId is not valid.</exception>
-    Task<IEnumerable<ReferralDTO>> GetReferralsByUserId(Guid userId, CancellationToken cancellationToken);
+    Task<IEnumerable<ReferralDTO>> GetReferralsByReferrerUserId(Guid userId, CancellationToken cancellationToken);
     
     /// <summary>
-    /// Creates a new referral record.
+    /// Creates a new referral for a user who was referred by another user.
     /// </summary>
     /// <param name="refereeUserId">The unique identifier of the user who was referred.</param>
     /// <param name="referralCode">The referral code that was used.</param>

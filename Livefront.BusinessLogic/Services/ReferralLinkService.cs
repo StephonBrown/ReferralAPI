@@ -14,7 +14,6 @@ public class ReferralLinkService : IReferralLinkService
     private readonly IExternalDeeplinkApiService externalDeeplinkApiService;
     private readonly IUserRepository userRepository;
     private readonly ILogger<IReferralLinkService> logger;
-    private IReferralLinkService _referralLinkServiceImplementation;
 
     public ReferralLinkService(IReferralLinkRepository referralLinkRepository, 
         IUserRepository userRepository, 
@@ -66,7 +65,7 @@ public class ReferralLinkService : IReferralLinkService
         return referralLink.ToReferralLinkDto();
     }
     
-
+    /// <inheritdoc />
     public async Task<ReferralLinkDTO?> GetReferralLink(Guid userId, CancellationToken cancellationToken)
     {
         var user = await ValidateUserIdAndReturnUser(userId, cancellationToken);
