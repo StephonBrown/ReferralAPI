@@ -3,9 +3,9 @@ using Livefront.Referrals.DataAccess.Models;
 
 namespace Livefront.Referrals.API.Models;
 
-public class ReferralDTO(string firstName, string lastName)
+public class ReferralDTO
 {
-    [JsonPropertyName("first_name")] public string FirstName { get; set; } = firstName;
-    [JsonPropertyName("last_name")] public string LastName { get; set; } = lastName;
-    [JsonPropertyName("status")]public ReferralStatus Status { get; set; } = ReferralStatus.Complete;
+    [JsonPropertyName("first_name")] public string FirstName { get; init; }
+    [JsonPropertyName("last_name")] public string LastName { get; init; }
+    [JsonPropertyName("status")]public ReferralStatus Status { get; init; }
 }
