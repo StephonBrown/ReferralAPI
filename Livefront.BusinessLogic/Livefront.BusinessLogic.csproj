@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Livefront.Referrals.DataAccess\Livefront.Referrals.DataAccess.csproj" />
+    </ItemGroup>
+
 </Project>

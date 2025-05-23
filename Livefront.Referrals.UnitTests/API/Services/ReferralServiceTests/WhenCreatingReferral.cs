@@ -1,10 +1,8 @@
-using Livefront.Referrals.API.Exceptions;
-using Livefront.Referrals.API.Services;
+using Livefront.BusinessLogic.Exceptions;
+using Livefront.BusinessLogic.Services;
 using Livefront.Referrals.DataAccess.Exceptions;
 using Livefront.Referrals.DataAccess.Models;
-using Livefront.Referrals.DataAccess.Models.DeeplinkApi.Models;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 
 namespace Livefront.Referrals.UnitTests.API.Services.ReferralServiceTests;
 

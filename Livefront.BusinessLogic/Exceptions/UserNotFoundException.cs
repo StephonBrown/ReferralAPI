@@ -1,4 +1,4 @@
-namespace Livefront.Referrals.API.Exceptions;
+namespace Livefront.BusinessLogic.Exceptions;
 
 public class UserNotFoundException : Exception
 {

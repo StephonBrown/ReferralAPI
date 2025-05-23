@@ -1,8 +1,7 @@
 using System.Net;
-using Livefront.Referrals.API.Exceptions;
+using Livefront.BusinessLogic.Exceptions;
 using Livefront.Referrals.API.Models;
 using Livefront.Referrals.DataAccess.Exceptions;
-using Livefront.Referrals.DataAccess.Services;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace Livefront.Referrals.API;
