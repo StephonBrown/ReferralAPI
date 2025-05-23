@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Livefront.BusinessLogic\Livefront.BusinessLogic.csproj" />
       <ProjectReference Include="..\Livefront.Referrals.DataAccess\Livefront.Referrals.DataAccess.csproj" />
     </ItemGroup>
 

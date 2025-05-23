@@ -24,7 +24,7 @@ public interface IReferralLinkService
     Task<ReferralLinkDTO?> GetReferralLink(Guid userId, CancellationToken cancellationToken);
     
     /// <summary>
-    /// Extends the time-to-live of a referral link for a specific user.
+    /// Extends the time-to-live(TTL) of a referral link for a specific user.
     /// </summary>
     /// <param name="userId">The unique id of the user.</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation if needed or on timeout.</param>

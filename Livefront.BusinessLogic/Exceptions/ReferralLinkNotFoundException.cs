@@ -1,4 +1,4 @@
-namespace Livefront.Referrals.API.Exceptions;
+namespace Livefront.BusinessLogic.Exceptions;
 
 public class ReferralLinkNotFoundException(Guid userId): Exception($"Referral link for {userId} could not be found")
 {
