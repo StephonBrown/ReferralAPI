@@ -33,4 +33,22 @@ public class BaseServiceTestFixture
                 Arg.Any<CancellationToken>())
             .Returns(user);
     }
+    protected async Task ThenUserRespositoryGetByReferralCodeShouldBeCalled(string referralCode, int numberOfCalls)
+    {
+        await mockedUserRepository
+            .Received(numberOfCalls)
+            .GetUserByReferralCode(Arg.Is<string>(code => code == referralCode),
+                Arg.Is<CancellationToken>(ct => ct == cancellationToken));
+    }
+    protected void GivenUserRepositoryGetByReferralCodeReturnsUser(User referrerUser)
+    {
+        mockedUserRepository.GetUserByReferralCode(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(referrerUser);
+    }
+    
+    protected void GivenUserRepositoryGetByReferralCodeReturnsNull()
+    {
+        mockedUserRepository
+            .GetUserByReferralCode(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .ReturnsNull();
+    }
 }
