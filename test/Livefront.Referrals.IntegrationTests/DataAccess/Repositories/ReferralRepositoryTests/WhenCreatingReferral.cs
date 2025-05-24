@@ -126,7 +126,7 @@ public class WhenCreatingReferral : BaseRepositoryTestFixture
     }
     
     [Test]
-    public void GivenDateCreatdIsInvalid_ThenThrowsArgumentException()
+    public void GivenDateCreatedIsInvalid_ThenThrowsArgumentException()
     {
         //Arrange
         var referrer = Guid.NewGuid();
