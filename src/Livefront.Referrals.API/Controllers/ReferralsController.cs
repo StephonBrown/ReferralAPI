@@ -25,7 +25,7 @@ namespace Livefront.Referrals.API.Controllers
         
         [Authorize]
         [HttpPost]
-        public IActionResult MarkReferral([FromBody]CreateReferralRequest createReferralRequest)
+        public IActionResult CompleteReferral([FromBody]CreateReferralRequest createReferralRequest)
         {
             logger.LogInformation("CreateReferral called");
             return Ok(createReferralRequest);
