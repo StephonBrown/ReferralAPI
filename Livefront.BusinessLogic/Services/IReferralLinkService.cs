@@ -1,4 +1,4 @@
-using Livefront.Referrals.API.Models;
+using Livefront.BusinessLogic.Models;
 
 namespace Livefront.Referrals.API.Services;
 

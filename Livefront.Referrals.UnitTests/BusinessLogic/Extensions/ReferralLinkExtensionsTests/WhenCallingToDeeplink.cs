@@ -1,7 +1,7 @@
-using Livefront.Referrals.API.Extensions;
+using Livefront.BusinessLogic.Extensions;
 using Livefront.Referrals.DataAccess.Models;
 
-namespace Livefront.Referrals.UnitTests.API.Extensions.ReferralLinkExtensionsTests;
+namespace Livefront.Referrals.UnitTests.BusinessLogic.Extensions.ReferralLinkExtensionsTests;
 
 [TestFixture]
 public class WhenCallingToDeeplink
