@@ -5,25 +5,22 @@ namespace Livefront.BusinessLogic.Extensions;
 
 public static class ReferralExtensions
 {
-    public static ReferralDTO? ToReferralDto(this Referral? referral, User referee)
+    public static ReferralDTO ToReferralDto(this Referral referral, User referee)
     {
         if(referral == null)
         {
-            return null;
+            throw new ArgumentNullException(nameof(referral), "Referral cannot be null.");
         }
-        
-        if(referee == null)
-        {
-            throw new ArgumentNullException(nameof(referee));
-        }
+
+        ArgumentNullException.ThrowIfNull(referee);
 
         if (string.IsNullOrWhiteSpace(referee.FirstName))
         {
-            throw new ArgumentNullException(nameof(referee.FirstName), "Referee first name cannot be null or empty.");
+            throw new ArgumentNullException(nameof(referee), "Referee first name cannot be null or empty.");
         }
         if (string.IsNullOrWhiteSpace(referee.LastName))
         {
-            throw new ArgumentNullException(nameof(referee.LastName), "Referee last name cannot be null or empty.");
+            throw new ArgumentNullException(nameof(referee), "Referee last name cannot be null or empty.");
         }
         
         return new ReferralDTO
