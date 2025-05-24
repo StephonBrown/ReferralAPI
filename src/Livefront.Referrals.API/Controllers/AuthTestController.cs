@@ -7,7 +7,6 @@ using Livefront.Referrals.DataAccess.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using NuGet.Protocol;
 
 namespace Livefront.Referrals.API.Controllers;
 /// <summary>

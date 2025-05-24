@@ -29,8 +29,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Livefront.Referrals.API\Livefront.Referrals.API.csproj" />
-      <ProjectReference Include="..\Livefront.Referrals.DataAccess\Livefront.Referrals.DataAccess.csproj" />
+      <ProjectReference Include="..\..\src\Livefront.Referrals.API\Livefront.Referrals.API.csproj" />
+      <ProjectReference Include="..\..\src\Livefront.Referrals.DataAccess\Livefront.Referrals.DataAccess.csproj" />
     </ItemGroup>
 
     <ItemGroup>

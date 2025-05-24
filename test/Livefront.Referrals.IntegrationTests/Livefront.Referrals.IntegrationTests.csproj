@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Livefront.Referrals.DataAccess\Livefront.Referrals.DataAccess.csproj" />
+      <ProjectReference Include="..\..\src\Livefront.Referrals.DataAccess\Livefront.Referrals.DataAccess.csproj" />
     </ItemGroup>
 
 </Project>

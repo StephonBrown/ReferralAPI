@@ -1,18 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livefront.Referrals.API", "Livefront.Referrals.API\Livefront.Referrals.API.csproj", "{A1815419-DD45-4357-9726-486E8EC39687}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livefront.Referrals.API", "src\Livefront.Referrals.API\Livefront.Referrals.API.csproj", "{A1815419-DD45-4357-9726-486E8EC39687}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livefront.Referrals.UnitTests", "Livefront.Referrals.UnitTests\Livefront.Referrals.UnitTests.csproj", "{3E7ED630-F821-434E-A91D-DE0E80BB430D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livefront.Referrals.UnitTests", "test\Livefront.Referrals.UnitTests\Livefront.Referrals.UnitTests.csproj", "{3E7ED630-F821-434E-A91D-DE0E80BB430D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B2D6012D-8918-4254-B98F-023BA9AA5EBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livefront.Referrals.IntegrationTests", "Livefront.Referrals.IntegrationTests\Livefront.Referrals.IntegrationTests.csproj", "{84A5A7A6-0FEF-408A-BF5B-E694E66D2F4C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livefront.Referrals.IntegrationTests", "test\Livefront.Referrals.IntegrationTests\Livefront.Referrals.IntegrationTests.csproj", "{84A5A7A6-0FEF-408A-BF5B-E694E66D2F4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livefront.Referrals.FunctionalTests", "Livefront.Referrals.FunctionalTests\Livefront.Referrals.FunctionalTests.csproj", "{35FD37FD-2833-4CB2-BA7C-C71CB3D9B5CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livefront.Referrals.FunctionalTests", "test\Livefront.Referrals.FunctionalTests\Livefront.Referrals.FunctionalTests.csproj", "{35FD37FD-2833-4CB2-BA7C-C71CB3D9B5CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livefront.Referrals.DataAccess", "Livefront.Referrals.DataAccess\Livefront.Referrals.DataAccess.csproj", "{181E0AC4-3EFC-4969-BB5D-3BA9974143A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livefront.Referrals.DataAccess", "src\Livefront.Referrals.DataAccess\Livefront.Referrals.DataAccess.csproj", "{181E0AC4-3EFC-4969-BB5D-3BA9974143A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livefront.BusinessLogic", "Livefront.BusinessLogic\Livefront.BusinessLogic.csproj", "{B4918D78-39B1-4A79-A7CB-87DA43FAFEF7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Livefront.BusinessLogic", "src\Livefront.BusinessLogic\Livefront.BusinessLogic.csproj", "{B4918D78-39B1-4A79-A7CB-87DA43FAFEF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
