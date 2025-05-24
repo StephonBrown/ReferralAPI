@@ -10,14 +10,6 @@ namespace Livefront.Referrals.DataAccess.Repositories;
 public interface IReferralRepository
 {
     /// <summary>
-    /// Get a referral by its unique identifier
-    /// </summary>
-    /// <param name="referralId">the unique id of the referral</param>
-    /// <param name="cancellationToken">a cancellation token to cancel the operation or timeout</param>
-    /// <returns>Returns a unique referral with the a matching id or null</returns>
-    Task<Referral?> GetById(Guid referralId, CancellationToken cancellationToken);
-    
-    /// <summary>
     /// Get all referrals by the a referrer's id
     /// </summary>
     /// <param name="userId">the unique user id of the referrer</param>
@@ -40,13 +32,4 @@ public interface IReferralRepository
     /// <exception cref="ReferralAlreadyExistsException">Thrown when a referral already exists for the referrer and referee</exception>
     /// <remarks>a referral is marked complete when the referral is created because the refereeId is known and the referrerId is known</remarks>
     Task<Referral> Create(Referral referral, CancellationToken cancellationToken);
-    
-    /// <summary>
-    /// Deletes a referral by its unique identifier
-    /// </summary>
-    /// <param name="referralId">the unique id of the referral</param>
-    /// <param name="cancellationToken">a cancellation token to cancel the operation or timeout</param>
-    /// <exception cref="ArgumentException">Thrown when the referral is null</exception>
-    /// <exception cref="DataPersistenceException">Thrown when the referral cannot be deleted</exception>
-    Task Delete(Guid referralId, CancellationToken cancellationToken);
 }

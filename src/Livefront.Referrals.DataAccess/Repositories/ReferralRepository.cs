@@ -16,20 +16,6 @@ public class ReferralRepository : IReferralRepository
         this.referralsContext = referralsContext;
         this.logger = logger;
     }
-    
-    /// <inheritdoc />
-    public async Task<Referral?> GetById(Guid referralId, CancellationToken cancellationToken)
-    {
-        if (referralId == Guid.Empty)
-        {
-            logger.LogWarning("Referral ID is empty. Referral ID: {ReferralId}", referralId);
-            throw new ArgumentException("Referral ID cannot be empty.", nameof(referralId));
-        }
-
-        return await referralsContext
-            .Set<Referral>()
-            .FirstOrDefaultAsync(r => r.Id == referralId, cancellationToken);
-    }
 
     /// <inheritdoc />
     public async Task<IEnumerable<Referral>> GetReferralsByReferrerId(Guid userId, CancellationToken cancellationToken)
@@ -76,26 +62,7 @@ public class ReferralRepository : IReferralRepository
         {
             contextualLogger.Error(e, "Failed to create a referral");
             throw new DataPersistenceException("Failed to create a referral", e);
-        }    }
-    
-    /// <inheritdoc />
-    public async Task Delete(Guid id, CancellationToken cancellationToken)
-    {
-        if (id == Guid.Empty)
-        {
-            logger.LogWarning("Referral ID is empty. Referral ID: {ReferralId}", id);
-            throw new ArgumentException("Referral ID cannot be empty.", nameof(id));
-        }
-
-        var referral = await GetById(id, cancellationToken);
-        if (referral == null)
-        {
-            logger.LogWarning("Referral not found. Referral ID: {ReferralId}", id);
-            throw new ReferralNotFoundException(id);
-        }
-
-        referralsContext.Referrals.Remove(referral);
-        await referralsContext.SaveChangesAsync(cancellationToken);
+        }    
     }
     
     private void ValidateReferral(Referral referral)
