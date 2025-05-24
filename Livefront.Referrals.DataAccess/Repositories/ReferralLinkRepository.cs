@@ -82,7 +82,7 @@ public class ReferralLinkRepository : IReferralLinkRepository
         {
             var existingReferralLink = await referralsContext
                 .ReferralLinks
-                .SingleOrDefaultAsync(link => link.UserId == userId, cancellationToken);
+                .FirstOrDefaultAsync(link => link.UserId == userId, cancellationToken);
             
             if (existingReferralLink != null)
             {
@@ -121,7 +121,7 @@ public class ReferralLinkRepository : IReferralLinkRepository
         {
             var existingReferralLink = await referralsContext
                 .ReferralLinks
-                .SingleOrDefaultAsync(link => link.UserId == userId, cancellationToken);
+                .FirstOrDefaultAsync(link => link.UserId == userId, cancellationToken);
             
             if (existingReferralLink != null && newExpirationDate > existingReferralLink.ExpirationDate)
             {

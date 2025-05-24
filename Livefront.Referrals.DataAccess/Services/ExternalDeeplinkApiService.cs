@@ -26,7 +26,6 @@ public class ExternalDeeplinkApiService : IExternalDeeplinkApiService
             logger.LogWarning("Invalid referral code {@ReferralCode}", referralCode);
             throw new ArgumentException("Referral code must not be empty", nameof(referralCode));
         }
-        
 
         var generateLinkApiRequest = new CreateDeeplinkApiRequest(userReferralCode: referralCode);
         
