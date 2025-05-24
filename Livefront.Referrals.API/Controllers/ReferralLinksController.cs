@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,14 +15,15 @@ namespace Livefront.Referrals.API.Controllers
             this.logger = logger;
         }
     
+        [Authorize]
         [HttpPost]
-        
         public IActionResult CreateReferralLink(Guid id)
         {
             logger.LogInformation("CreateReferral called");
             return Ok();
         }
         
+        [Authorize]
         [HttpPut]
         public IActionResult UpdateExpirationDate(Guid id)
         {

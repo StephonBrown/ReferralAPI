@@ -1,4 +1,5 @@
 using Livefront.Referrals.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Livefront.Referrals.API.Controllers
@@ -13,7 +14,8 @@ namespace Livefront.Referrals.API.Controllers
         {
             this.logger = logger;
         }
-
+        
+        [Authorize]
         [HttpGet]
         public IActionResult GetReferrals()
         {
@@ -21,8 +23,9 @@ namespace Livefront.Referrals.API.Controllers
             return Ok();
         }
         
+        [Authorize]
         [HttpPost]
-        public IActionResult CreateReferral([FromBody]CreateReferralRequest createReferralRequest)
+        public IActionResult MarkReferral([FromBody]CreateReferralRequest createReferralRequest)
         {
             logger.LogInformation("CreateReferral called");
             return Ok(createReferralRequest);
