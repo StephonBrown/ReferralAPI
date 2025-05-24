@@ -1,14 +1,28 @@
 
 @HostAddress = https://localhost:7251
+@token = ""
+
+
 
 GET {{HostAddress}}/api/referrals
 Accept: application/json
 
 ###
 
+POST {{HostAddress}}/api/AuthTest/get-bearer-token
+Accept: application/json
+Content-Type: application/json
+
+{
+    "secret_code" : "TEST"
+}
+
+
+###
 POST {{HostAddress}}/api/referrals
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "referee_id" : "566fc9e1-743f-4074-a467-d88d67e7186c",
