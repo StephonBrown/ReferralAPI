@@ -1,14 +1,28 @@
 
 @HostAddress = https://localhost:7251
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVGVzdCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL3NpZCI6IjNmY2Y5ZTZmLTc2MGEtNGM0ZC1iNDQ1LWYzZDI4YzMzMjJjYyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6InRlc3RAZW1haWwuY29tIiwiZXhwIjoxNzQ4MDc0NTg1LCJpc3MiOiJsb2NhbGhvc3QiLCJhdWQiOiJsb2NhbGhvc3QifQ.j8y4wW7Iv2JkLy8ltAYZOvclsZ3Q-J-FNkbl0hCP3g4
+
+
 
 GET {{HostAddress}}/api/referrals
 Accept: application/json
 
 ###
 
+POST {{HostAddress}}/api/AuthTest/get-bearer-token
+Accept: application/json
+Content-Type: application/json
+
+{
+    "secret_code" : "TEST"
+}
+
+
+###
 POST {{HostAddress}}/api/referrals
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "referee_id" : "566fc9e1-743f-4074-a467-d88d67e7186c",
