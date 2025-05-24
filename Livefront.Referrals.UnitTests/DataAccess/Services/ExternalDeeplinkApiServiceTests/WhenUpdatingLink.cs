@@ -1,7 +1,5 @@
 using System.Net;
-using System.Text.Json;
 using Livefront.Referrals.DataAccess.Exceptions;
-using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Models.DeeplinkApi;
 using Livefront.Referrals.DataAccess.Models.DeeplinkApi.Models;
 using Livefront.Referrals.DataAccess.Services;
@@ -58,7 +56,7 @@ public class WhenUpdatingLink : BaseDeeplinkApiTestFixture
         //Arrange
         var mockedRequestEndpoint =
             SetRequestHandler<UpdateDeeplinkApiRequest, DeepLink>(
-                null,
+                null!,
                 null,
                 HttpStatusCode.OK,
                 HttpMethod.Put,
@@ -66,7 +64,7 @@ public class WhenUpdatingLink : BaseDeeplinkApiTestFixture
         //Act/Assert
         //Adding null to the update call in the place of the actual request object
         var exception = Assert.ThrowsAsync<NullReferenceException>(async () => await externalDeeplinkApiService.UpdateLinkTimeToLive(null, cancellationToken));
-        Assert.That(exception.Message, Contains.Substring("deepLink"));
+        Assert.That(exception!.Message, Contains.Substring("deepLink"));
         Assert.That(mockHttpHandler.GetMatchCount(mockedRequestEndpoint), Is.EqualTo(0));
     }
     
@@ -92,7 +90,7 @@ public class WhenUpdatingLink : BaseDeeplinkApiTestFixture
         
         //Act/Assert
         var exception = Assert.ThrowsAsync<ArgumentException>(async () => await externalDeeplinkApiService.UpdateLinkTimeToLive(deepLink, cancellationToken));
-        Assert.That(exception.Message, Contains.Substring("Id"));
+        Assert.That(exception!.Message, Contains.Substring("Id"));
         Assert.That(mockHttpHandler.GetMatchCount(mockedRequestEndpoint), Is.EqualTo(0));
     }
     
@@ -115,7 +113,7 @@ public class WhenUpdatingLink : BaseDeeplinkApiTestFixture
         //Act/Assert
         var exception = Assert.ThrowsAsync<ExternalApiServiceException>(async () => await externalDeeplinkApiService.UpdateLinkTimeToLive(deepLink, cancellationToken));
         Assert.That(exception, Is.TypeOf<ExternalApiServiceException>());
-        Assert.That(exception.InnerException, Is.TypeOf<HttpRequestException>());
+        Assert.That(exception!.InnerException, Is.TypeOf<HttpRequestException>());
         Assert.That(mockHttpHandler.GetMatchCount(mockedRequestEndpoint), Is.EqualTo(1));
     }
     

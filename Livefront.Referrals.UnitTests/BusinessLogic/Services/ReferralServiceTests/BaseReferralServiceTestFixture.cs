@@ -1,12 +1,11 @@
 using Livefront.Referrals.API.Services;
 using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Repositories;
-using Livefront.Referrals.DataAccess.Services;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 
-namespace Livefront.Referrals.UnitTests.API.Services.ReferralServiceTests;
+namespace Livefront.Referrals.UnitTests.BusinessLogic.Services.ReferralServiceTests;
 
 public class BaseReferralServiceTestFixture : BaseServiceTestFixture
 {
@@ -17,6 +16,25 @@ public class BaseReferralServiceTestFixture : BaseServiceTestFixture
     protected void GivenReferralRepositoryCreateReturnsReferral(Referral referral)
     {
         mockedReferralRepository.Create(Arg.Any<Referral>(), cancellationToken).Returns(referral);
+    }
+    
+    protected void GivenReferralRepositoryGetReferralsByReferrerIdReturnsReferral(IEnumerable<Referral> referrals)
+    {
+        mockedReferralRepository.GetReferralsByReferrerId(Arg.Any<Guid>(), cancellationToken).Returns(referrals);
+    }
+    
+    protected async Task ThenReferralRepositoryGetReferralsByReferrerIdShouldBeCalled(Guid referralId, int numberOfCalls)
+    {
+        await mockedReferralRepository
+            .Received(numberOfCalls)
+            .GetReferralsByReferrerId(Arg.Is<Guid>(id => id == referralId), 
+                Arg.Is<CancellationToken>(ct => ct == cancellationToken));
+    }
+    protected void GivenReferralRepositoryGetReferralsByUserIdReturnEmptyIEnumerable()
+    {
+        mockedReferralRepository
+            .GetReferralsByReferrerId(Arg.Any<Guid>(), cancellationToken)
+            .Returns(Enumerable.Empty<Referral>());
     }
     
     protected void GivenReferralRepositoryCreateReturnsNull()

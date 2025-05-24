@@ -1,5 +1,4 @@
 using Livefront.BusinessLogic.Models;
-using Livefront.Referrals.API.Models;
 
 namespace Livefront.Referrals.API.Services;
 
@@ -27,14 +26,5 @@ public interface IReferralService
     /// <exception cref="ArgumentException">Thrown when the refereeUserId is not valid.</exception>
     /// <exception cref="ArgumentNullException">Thrown when the referralCode is null or empty.</exception> 
     Task<ReferralDTO?> CreateReferral(Guid refereeUserId, string referralCode, CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Deletes a referral record by its unique identifier.
-    /// </summary>
-    /// <param name="referralId">The unique identifier of the referral to delete.</param>
-    /// <param name="cancellationToken"> cancellation token to cancel the operation or timeout </param>
-    /// <exception cref="ArgumentException">Thrown when the referralId is not valid.</exception>
-    /// <remarks>This operation is typically restricted to administrative users.</remarks>
-    Task DeleteReferral(Guid referralId, CancellationToken cancellationToken);
     
 }

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 
-namespace Livefront.Referrals.UnitTests.API.Services.ReferralLinkServiceTests;
+namespace Livefront.Referrals.UnitTests.BusinessLogic.Services.ReferralLinkServiceTests;
 
 public class BaseReferralLinkServiceTestFixture : BaseServiceTestFixture
 {

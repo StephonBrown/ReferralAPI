@@ -3,7 +3,7 @@ using Livefront.BusinessLogic.Services;
 using Livefront.Referrals.DataAccess.Models;
 using NSubstitute;
 
-namespace Livefront.Referrals.UnitTests.API.Services.ReferralLinkServiceTests;
+namespace Livefront.Referrals.UnitTests.BusinessLogic.Services.ReferralLinkServiceTests;
 
 [TestFixture]
 public class WhenGettingReferralLink : BaseReferralLinkServiceTestFixture
@@ -74,10 +74,12 @@ public class WhenGettingReferralLink : BaseReferralLinkServiceTestFixture
         GivenReferralLinkRepositoryGetByUserIdReturnsNull();
         
         // Act
-        var result = await referralLinkService.GetReferralLink(userId, cancellationToken);
+        var exception = Assert
+            .ThrowsAsync<ArgumentNullException>(async () => 
+                await referralLinkService.GetReferralLink(userId, cancellationToken));
 
         // Assert
-        Assert.IsNull(result);
+        Assert.That(exception!.ParamName, Is.EqualTo("referralLink"));
         await ThenUserRepositoryGetByIdShouldBeCalled(userId, 1);
         await ThenReferralLinkRepositoryGetByUserIdShouldBeCalled(userId, 1);
     }

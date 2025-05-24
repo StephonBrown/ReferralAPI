@@ -3,7 +3,7 @@ using Livefront.Referrals.DataAccess.Repositories;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 
-namespace Livefront.Referrals.UnitTests.API.Services;
+namespace Livefront.Referrals.UnitTests.BusinessLogic.Services;
 
 public class BaseServiceTestFixture
 {
@@ -33,6 +33,40 @@ public class BaseServiceTestFixture
                 Arg.Any<CancellationToken>())
             .Returns(user);
     }
+    protected void GivenUserRepositoryGetByUserIdBySpecificUserIdReturnsUser(Guid userId, User user)
+    {
+        mockedUserRepository
+            .GetById(Arg.Is<Guid>(id => id == userId), 
+                Arg.Any<CancellationToken>())
+            .Returns(user);
+    }
+    
+    protected void GivenUserRepositoryGetByIdsReturnsUsers(IList<User> users)
+    {
+        var userIds = users.Select(user => user.Id).ToHashSet();
+        mockedUserRepository
+            .GetByIds(Arg.Is<IEnumerable<Guid>>(ids => ids.ToHashSet().SetEquals(userIds)), 
+                Arg.Any<CancellationToken>())
+            .Returns(users);
+    }
+    
+    protected void GivenUserRepositoryGetByIdsReturnsEmpty()
+    {
+        mockedUserRepository
+            .GetByIds(Arg.Any<IEnumerable<Guid>>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Enumerable.Empty<User>());
+    }
+    
+    protected async Task ThenUserRepositoryGetByIdsShouldBeCalled(IEnumerable<Guid> userIds, int numberOfCalls)
+    {
+        await mockedUserRepository
+            .Received(numberOfCalls)
+            .GetByIds(Arg.Is<IEnumerable<Guid>>(ids => ids.ToHashSet().SetEquals(userIds.ToHashSet())), 
+                Arg.Is<CancellationToken>(ct => ct == cancellationToken));
+    }
+    
+    
     protected async Task ThenUserRespositoryGetByReferralCodeShouldBeCalled(string referralCode, int numberOfCalls)
     {
         await mockedUserRepository

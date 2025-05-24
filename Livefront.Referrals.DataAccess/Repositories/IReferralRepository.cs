@@ -44,7 +44,7 @@ public interface IReferralRepository
     /// <summary>
     /// Deletes a referral by its unique identifier
     /// </summary>
-    /// <param name="id">the unique id of the referral</param>
+    /// <param name="referralId">the unique id of the referral</param>
     /// <param name="cancellationToken">a cancellation token to cancel the operation or timeout</param>
     /// <exception cref="ArgumentException">Thrown when the referral is null</exception>
     /// <exception cref="DataPersistenceException">Thrown when the referral cannot be deleted</exception>
