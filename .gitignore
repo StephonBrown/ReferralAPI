@@ -12,3 +12,5 @@ Livefront.Referrals.API/Referrals.db
 Livefront.Referrals.API/Referrals.db-shm
 
 Livefront.Referrals.API/Referrals.db-wal
+
+.DS_Store
