@@ -18,11 +18,11 @@ public class ReferralRepository : IReferralRepository
     }
     
     /// <inheritdoc />
-    public async Task<Referral> GetById(Guid referralId, CancellationToken cancellationToken)
+    public async Task<Referral?> GetById(Guid referralId, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
-    
+
     /// <inheritdoc />
     public async Task<IEnumerable<Referral>> GetReferralsByReferrerId(Guid userId, CancellationToken cancellationToken)
     {
@@ -50,9 +50,10 @@ public class ReferralRepository : IReferralRepository
             if (dbUpdateException.Message.Contains("duplicate key"))
             {
                 contextualLogger
-                    .Error(dbUpdateException, "Referral already exists for referrer {@ReferrerId} and referree {@RefereeId}", referral.ReferrerId, referral.RefereeId);
+                    .Error(dbUpdateException, 
+                        "Referral already exists for referrer {@ReferrerId} and referee {@RefereeId}", referral.ReferrerId, referral.RefereeId);
             }
-            throw new ReferralAlreadyExistsException($"Referral already exists for referrer and referree ", dbUpdateException);
+            throw new ReferralAlreadyExistsException($"Referral already exists for referrer and referee ", dbUpdateException);
         }
         catch (Exception e)
         {

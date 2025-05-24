@@ -1,3 +1,4 @@
+using System.Collections;
 using Livefront.Referrals.DataAccess.Models;
 
 namespace Livefront.Referrals.DataAccess.Repositories;
@@ -19,24 +20,13 @@ public interface IUserRepository
     Task<User?> GetById(Guid userId, CancellationToken cancellationToken);
     
     /// <summary>
-    /// Check if a user exists in the system by their unique id
+    /// Retrieves a collection of users by their ids
     /// </summary>
-    /// <param name="userId">the unique identifier of the user</param>
-    /// <param name="cancellationToken">a cancellation token to cancel the operation or timeout</param>
-    /// <returns>Returns true if the user exists, false otherwise</returns>
-    /// <exception cref="ArgumentException">Thrown when the userId is empty</exception>
-    Task<bool> ExistsById(Guid userId, CancellationToken cancellationToken);
+    /// <param name="userIds"></param> 
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<IEnumerable<User>> GetByIds(IEnumerable<Guid> userIds, CancellationToken cancellationToken);
     
-    /// <summary>
-    /// Check if a user exists in the system by their unique referral code
-    /// </summary>
-    /// <param name="referralCode">A unique referral code that is used to identify a user</param> 
-    /// <param name="cancellationToken">cancellation token to cancel the operation or timeout</param>
-    /// <exception cref="ArgumentException">Thrown when the referralCode is not valid</exception>
-    /// <returns>Returns true if the user exists, false otherwise</returns>
-    /// <exception cref="ArgumentException">Thrown when the referralCode is not valid</exception>
-    Task<bool> ExistsByReferralCode(string referralCode, CancellationToken cancellationToken);
-
     /// <summary>
     /// Retrieve a user's referral code from user profile details using the user id
     /// </summary>

@@ -1,6 +1,6 @@
 using Livefront.BusinessLogic.Exceptions;
-using Livefront.Referrals.API.Extensions;
-using Livefront.Referrals.API.Models;
+using Livefront.BusinessLogic.Extensions;
+using Livefront.BusinessLogic.Models;
 using Livefront.Referrals.API.Services;
 using Livefront.Referrals.DataAccess.Exceptions;
 using Livefront.Referrals.DataAccess.Models;

@@ -9,7 +9,7 @@ namespace Livefront.Referrals.IntegrationTests.DataAccess.Repositories.ReferralR
 
 public class WhenCreatingReferral : BaseRepositoryTestFixture
 {
-    private IReferralRepository referralRepository;
+    private IReferralRepository referralRepository = null!;
     private ILogger<IReferralRepository> logger = Substitute.For<ILogger<IReferralRepository>>();
 
     [SetUp]
@@ -78,7 +78,7 @@ public class WhenCreatingReferral : BaseRepositoryTestFixture
         
         //Assert
         var exception = Assert.ThrowsAsync<ReferralAlreadyExistsException>(async () => await referralRepository.Create(referral2, cancellationToken));
-        Assert.That(exception.InnerException, Is.TypeOf<DbUpdateException>());
+        Assert.That(exception!.InnerException, Is.TypeOf<DbUpdateException>());
     }
     
     [Test]
@@ -99,7 +99,7 @@ public class WhenCreatingReferral : BaseRepositoryTestFixture
         
         //Act/Assert
         var exception = Assert.ThrowsAsync<ArgumentException>(async () => await referralRepository.Create(referral, cancellationToken));
-        Assert.That(exception.ParamName, Is.EqualTo("referral"));
+        Assert.That(exception!.ParamName, Is.EqualTo("referral"));
         
     }
     
@@ -121,7 +121,7 @@ public class WhenCreatingReferral : BaseRepositoryTestFixture
         
         //Act/Assert
         var exception = Assert.ThrowsAsync<ArgumentException>(async () => await referralRepository.Create(referral, cancellationToken));
-        Assert.That(exception.ParamName, Is.EqualTo("referral"));
+        Assert.That(exception!.ParamName, Is.EqualTo("referral"));
         
     }
     
@@ -143,7 +143,7 @@ public class WhenCreatingReferral : BaseRepositoryTestFixture
         
         //Act/Assert
         var exception = Assert.ThrowsAsync<ArgumentException>(async () => await referralRepository.Create(referral, cancellationToken));
-        Assert.That(exception.ParamName, Is.EqualTo("referral"));
+        Assert.That(exception!.ParamName, Is.EqualTo("referral"));
     }
     
     [TearDown]

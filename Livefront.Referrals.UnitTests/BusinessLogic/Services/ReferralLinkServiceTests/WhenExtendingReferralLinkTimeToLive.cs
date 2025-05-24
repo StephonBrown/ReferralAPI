@@ -5,7 +5,7 @@ using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Models.DeeplinkApi.Models;
 using NSubstitute;
 
-namespace Livefront.Referrals.UnitTests.API.Services.ReferralLinkServiceTests;
+namespace Livefront.Referrals.UnitTests.BusinessLogic.Services.ReferralLinkServiceTests;
 
 public class WhenExtendingReferralLinkTimeToLive : BaseReferralLinkServiceTestFixture
 {

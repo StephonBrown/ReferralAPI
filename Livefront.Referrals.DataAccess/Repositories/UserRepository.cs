@@ -20,13 +20,9 @@ public class UserRepository : IUserRepository
     {
         throw new NotImplementedException();
     }
-
-    public Task<bool> ExistsById(Guid userId, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> ExistsByReferralCode(string referralCode, CancellationToken cancellationToken)
+    
+    /// <inheritdoc />
+    public async Task<IEnumerable<User>> GetByIds(IEnumerable<Guid> userIds, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

@@ -4,7 +4,7 @@ using Livefront.Referrals.DataAccess.Exceptions;
 using Livefront.Referrals.DataAccess.Models;
 using NSubstitute;
 
-namespace Livefront.Referrals.UnitTests.API.Services.ReferralServiceTests;
+namespace Livefront.Referrals.UnitTests.BusinessLogic.Services.ReferralServiceTests;
 
 [TestFixture]
 public class WhenCreatingReferral : BaseReferralServiceTestFixture
