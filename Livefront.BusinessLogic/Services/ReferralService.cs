@@ -1,7 +1,6 @@
 using Livefront.BusinessLogic.Exceptions;
 using Livefront.BusinessLogic.Extensions;
 using Livefront.BusinessLogic.Models;
-using Livefront.Referrals.API.Extensions;
 using Livefront.Referrals.API.Services;
 using Livefront.Referrals.DataAccess.Exceptions;
 using Livefront.Referrals.DataAccess.Models;
@@ -24,9 +23,59 @@ public class ReferralService : IReferralService
     }
     
     /// <inheritdoc />
-    public async Task<IEnumerable<ReferralDTO>> GetReferralsByReferrerUserId(Guid userId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<ReferralDTO>> GetReferralsByReferrerUserId(Guid userId,
+        CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        if (userId == Guid.Empty)
+        {
+            logger.LogWarning("Referrer user ID is empty. Referee user ID: {RefereeUserId}", userId);
+            throw new ArgumentException("Referrer user ID cannot be empty.", nameof(userId));
+        }
+        
+        var referrer = await userRepository.GetById(userId, cancellationToken);
+        if (referrer == null)
+        {
+            logger.LogWarning("Referrer not found for user ID: {UserId}", userId);
+            throw new UserNotFoundException(userId);
+        }
+
+        var referrals = await referralRepository
+            .GetReferralsByReferrerId(referrer.Id, cancellationToken);
+        var referralsList = referrals.ToList();
+        if ( referralsList.Count == 0)
+        {
+            logger.LogWarning("No referrals found for user ID: {UserId}", userId);
+            return Enumerable.Empty<ReferralDTO>();
+        }
+        
+        var refereeIds = referralsList.Select(r => r.RefereeId).Distinct().ToList();
+        var referees = await userRepository.GetByIds(refereeIds, cancellationToken);
+        var refereesList = referees.ToList();
+        
+        // An unlikely case when a referral may exist but the user is not found in the database (They've been deleted or deactivated)
+        if (refereesList.Count == 0)
+        {
+            logger.LogWarning("No referees found for user ID: {UserId}", userId);
+            return Enumerable.Empty<ReferralDTO>();
+        }
+        
+        logger
+            .LogDebug("{NumberOfRefer} Referrals found for user ID: {UserId}",
+                referralsList.Count, 
+                userId);
+        
+        // Map each referral to its corresponding referee
+        var referralDtos = new List<ReferralDTO>();
+        foreach (var referral in referralsList)
+        {
+            var referee = refereesList.FirstOrDefault(r => r.Id == referral.RefereeId);
+            if (referee != null)
+            {
+                referralDtos.Add(referral.ToReferralDto(referee));
+            }
+        }
+
+        return referralDtos;
     }
     
     /// <inheritdoc />
@@ -55,6 +104,12 @@ public class ReferralService : IReferralService
         {
             logger.LogWarning("Referee not found for user ID: {UserId}", refereeUserId);
             throw new UserNotFoundException(refereeUserId);
+        }
+        
+        if(referrer.Id == referee.Id)
+        {
+            logger.LogWarning("Referrer and referee cannot be the same user. Referrer ID: {ReferrerId}, Referee ID: {RefereeId}", referrer.Id, referee.Id);
+            throw new ArgumentException("Referrer and referee cannot be the same user.", nameof(refereeUserId));
         }
         
         var referral = new Referral
