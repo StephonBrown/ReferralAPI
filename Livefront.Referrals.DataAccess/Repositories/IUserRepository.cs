@@ -1,4 +1,3 @@
-using System.Collections;
 using Livefront.Referrals.DataAccess.Models;
 
 namespace Livefront.Referrals.DataAccess.Repositories;

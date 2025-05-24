@@ -20,13 +20,30 @@ public class ReferralRepository : IReferralRepository
     /// <inheritdoc />
     public async Task<Referral?> GetById(Guid referralId, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        if (referralId == Guid.Empty)
+        {
+            logger.LogWarning("Referral ID is empty. Referral ID: {ReferralId}", referralId);
+            throw new ArgumentException("Referral ID cannot be empty.", nameof(referralId));
+        }
+
+        return await referralsContext
+            .Set<Referral>()
+            .FirstOrDefaultAsync(r => r.Id == referralId, cancellationToken);
     }
 
     /// <inheritdoc />
     public async Task<IEnumerable<Referral>> GetReferralsByReferrerId(Guid userId, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        if (userId == Guid.Empty)
+        {
+            logger.LogWarning("User ID is empty. User ID: {UserId}", userId);
+            throw new ArgumentException("User ID cannot be empty.", nameof(userId));
+        }
+
+        return await referralsContext
+            .Set<Referral>()
+            .Where(r => r.ReferrerId == userId)
+            .ToListAsync(cancellationToken);
     }
     
     /// <inheritdoc />
@@ -64,7 +81,21 @@ public class ReferralRepository : IReferralRepository
     /// <inheritdoc />
     public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        if (id == Guid.Empty)
+        {
+            logger.LogWarning("Referral ID is empty. Referral ID: {ReferralId}", id);
+            throw new ArgumentException("Referral ID cannot be empty.", nameof(id));
+        }
+
+        var referral = await GetById(id, cancellationToken);
+        if (referral == null)
+        {
+            logger.LogWarning("Referral not found. Referral ID: {ReferralId}", id);
+            throw new ReferralNotFoundException(id);
+        }
+
+        referralsContext.Referrals.Remove(referral);
+        await referralsContext.SaveChangesAsync(cancellationToken);
     }
     
     private void ValidateReferral(Referral referral)
