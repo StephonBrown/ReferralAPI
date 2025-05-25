@@ -3,8 +3,7 @@ using Livefront.Referrals.DataAccess.Models;
 namespace Livefront.Referrals.DataAccess.Repositories;
 
 /// <summary>
-/// A repository for retrieving user profile details that can be implemented to retrieve information from a database
-/// or an internal service.
+/// This repository is responsible for managing user profiles.
 /// </summary>
 public interface IUserRepository
 {
@@ -17,6 +16,15 @@ public interface IUserRepository
     /// <returns>Returns the matching user or null if not found</returns>
     /// <exception cref="ArgumentException">Thrown when the userId is empty</exception>
     Task<User?> GetById(Guid userId, CancellationToken cancellationToken);
+    
+    
+    /// <summary>
+    /// Creates a new user profile
+    /// </summary>
+    /// <param name="user"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<User> Create(User user, CancellationToken cancellationToken);
     
     /// <summary>
     /// Retrieves a collection of users by their ids
@@ -43,4 +51,5 @@ public interface IUserRepository
     /// <returns> The user with a matching referral code</returns>
     /// <exception cref="ArgumentException">Thrown when the referralCode is not valid</exception>
     Task<User?> GetUserByReferralCode(string referralCode, CancellationToken cancellationToken);
+    
 }
