@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json.Serialization;
+using Livefront.Referrals.API.Models;
 using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Livefront.Referrals.API.Controllers;
+
 /// <summary>
-/// This is merely a test controller to test provide developers and testers with a way to
+/// This is  a test controller to provide developers and tests with a way to
 /// access the API without having to go through the full authentication process.
 /// This is not intended, or recommended for production use.
 /// The test user that is returned is seeded into the database for test usage.
@@ -33,15 +34,19 @@ public class AuthTestController : ControllerBase
     [AllowAnonymous]
     [HttpPost]
     [Route("get-bearer-token")]
-    public async Task<IActionResult> GetJWTBearerToken([FromBody]Secret secret, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetJWTBearerToken([FromBody]RequestSecret requestSecret, CancellationToken cancellationToken)
     {
         
         logger.LogInformation("Auth test endpoint called");
-        if(secret.SecretCode == "TEST")
+        if(requestSecret.SecretCode == "TEST")
         {
             var testUser = await userRepository.GetUserByReferralCode("TESTCODE", cancellationToken);
             var token = GenerateAccessToken(testUser!);
-            return Ok(new { AccessToken = new JwtSecurityTokenHandler().WriteToken(token)});
+            var accessToken = new AccessToken
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token)
+            };
+            return Ok(accessToken);
         }
         return BadRequest("Invalid secret code. Please provide the correct secret code.");
     }
@@ -74,12 +79,7 @@ public class AuthTestController : ControllerBase
         return token;
     }
     
-    // This is necessary to be able to deserialize the request body
-    public class Secret(string SecretCode)
-    {
-        [JsonPropertyName("secret_code")]
-        public string SecretCode { get; set; } = SecretCode;
-    }
+
 }
 
     
