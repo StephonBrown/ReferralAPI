@@ -4,12 +4,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Livefront.Referrals.DataAccess.Repositories;
 
-public class UserRepository : IUserRepository
+/// <remarks> This is a test user  repository.In a real-world scenario, this would already exist as a service and we would user the interface as a wrapper</remarks>
+public class TestUserRepository : IUserRepository
 {
     private readonly ReferralsContext referralsContext;
     private readonly ILogger<ReferralRepository> logger;
     
-    public UserRepository(ReferralsContext referralsContext, ILogger<ReferralRepository> logger)
+    public TestUserRepository(ReferralsContext referralsContext, ILogger<ReferralRepository> logger)
     {
         this.referralsContext = referralsContext;
         this.logger = logger;
@@ -27,6 +28,15 @@ public class UserRepository : IUserRepository
         return await referralsContext
             .Users
             .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+    }
+
+    public async Task<User> Create(User user, CancellationToken cancellationToken)
+    {
+        ValidateUser(user);
+        await referralsContext.Users.AddAsync(user, cancellationToken);
+        await referralsContext.SaveChangesAsync(cancellationToken);
+
+        return user;
     }
 
     /// <inheritdoc />
@@ -72,5 +82,35 @@ public class UserRepository : IUserRepository
         return await referralsContext
             .Users
             .FirstOrDefaultAsync(u => u.ReferralCode == referralCode, cancellationToken);
+    }
+    
+    private void ValidateUser(User user)
+    {
+        if (user == null)
+        {
+            logger.LogWarning("User is null. User: {User}", user);
+            throw new ArgumentNullException(nameof(user), "User cannot be null.");
+        }
+
+        if (string.IsNullOrWhiteSpace(user.Email))
+        {
+            logger.LogWarning("User email is null or empty. User: {User}", user);
+            throw new ArgumentException("User email cannot be null or empty.", nameof(user.Email));
+        }
+        if (string.IsNullOrWhiteSpace(user.ReferralCode))
+        {
+            logger.LogWarning("User referral code is null or empty. User: {User}", user);
+            throw new ArgumentException("User referral code cannot be null or empty.", nameof(user.ReferralCode));
+        }
+        if (string.IsNullOrWhiteSpace(user.FirstName))
+        {
+            logger.LogWarning("User first name is null or empty. User: {User}", user);
+            throw new ArgumentException("User first name cannot be null or empty.", nameof(user.FirstName));
+        }
+        if (string.IsNullOrWhiteSpace(user.LastName))
+        {
+            logger.LogWarning("User last name is null or empty. User: {User}", user);
+            throw new ArgumentException("User last name cannot be null or empty.", nameof(user.LastName));
+        }
     }
 }
