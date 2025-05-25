@@ -11,20 +11,34 @@ public static class ReferralExtensions
         {
             throw new ArgumentNullException(nameof(referral), "Referral cannot be null.");
         }
-
-        ArgumentNullException.ThrowIfNull(referee);
-
+        if(referral.Id == Guid.Empty)
+        {
+            throw new ArgumentException("Referral ID cannot be empty.", nameof(referral));
+        }
+        
+        if (referee == null)
+        {
+            throw new ArgumentNullException(nameof(referee), "Referee cannot be null.");
+        }
+        if (referee.Id == Guid.Empty)
+        {
+            throw new ArgumentException("Referee ID cannot be empty.", nameof(referee));
+        }
+        
         if (string.IsNullOrWhiteSpace(referee.FirstName))
         {
-            throw new ArgumentNullException(nameof(referee), "Referee first name cannot be null or empty.");
+            throw new ArgumentException("Referee first name cannot be null or empty.", nameof(referee));
         }
+        
         if (string.IsNullOrWhiteSpace(referee.LastName))
         {
-            throw new ArgumentNullException(nameof(referee), "Referee last name cannot be null or empty.");
+            throw new ArgumentException("Referee last name cannot be null or empty.", nameof(referee));
         }
         
         return new ReferralDTO
         {
+            ReferralId = referral.Id,
+            UserId = referee.Id,
             FirstName = referee.FirstName,
             LastName = referee.LastName,
             Status = referral.Status,
