@@ -86,7 +86,7 @@ public class Program
         });
         services.AddScoped<IReferralRepository, ReferralRepository>();
         services.AddScoped<IReferralLinkRepository, ReferralLinkRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserRepository, TestUserRepository>();
         services.AddScoped<IReferralService, ReferralService>();
         services.AddScoped<IReferralLinkService, ReferralLinkService>();
         services.AddScoped<IExternalDeeplinkApiService, MockDeeplinkApiService>();
