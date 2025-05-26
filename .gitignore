@@ -7,10 +7,11 @@ riderModule.iml
 
 Livefront.ReferralAPI.sln.DotSettings.user
 .idea/.idea.Livefront.ReferralAPI/.idea/*
-Livefront.Referrals.API/Referrals.db
+*.db
 
-Livefront.Referrals.API/Referrals.db-shm
+*.db-shm
 
-Livefront.Referrals.API/Referrals.db-wal
+*.db-wal
 
 .DS_Store
+
