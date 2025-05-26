@@ -35,10 +35,11 @@ public class GlobalExceptionHandler : IExceptionHandler
         
         switch (exception)
         {
-            case UserNotFoundException userNotFoundException:
-                problemDetails.Detail = userNotFoundException.Message;
+            case ReferralLinkNotFoundException:
+            case UserNotFoundException:
+                problemDetails.Detail = exception.Message;
                 problemDetails.Status = (int)HttpStatusCode.NotFound;
-                problemDetails.Title = "User Not Found";
+                problemDetails.Title = "Not Found";
                 break;
             case ReferralLinkAlreadyExistsException:
             case ReferralAlreadyExistsException:
@@ -59,7 +60,7 @@ public class GlobalExceptionHandler : IExceptionHandler
             case UnauthorizedAccessException:
                 problemDetails.Status = (int)HttpStatusCode.Unauthorized;
                 problemDetails.Title = "Unauthorized";
-                problemDetails.Detail = "You are not authorized to access this resource";
+                problemDetails.Detail = "Not authorized to access this resource";
                 break;
             default:
                 problemDetails.Status = (int)HttpStatusCode.InternalServerError;
