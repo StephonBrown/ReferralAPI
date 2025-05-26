@@ -9,15 +9,31 @@ namespace Livefront.Referrals.FunctionalTests.API;
 public class BaseControllerTestFixture
 {
     protected TestWebApplicationFactory? webApplicationFactory;
-    
-    protected async Task CreateAndSetAuthToken(HttpClient client)
+    protected AccessToken? accessToken;
+
+    protected void WebApplicationFactorySetup()
     {
-        var secret = new RequestSecret("TEST");
+        webApplicationFactory = new TestWebApplicationFactory();
+    }
+
+    protected HttpClient HttpClientSetup()
+    {
+        return webApplicationFactory!.CreateClient();
+    }
+    
+    protected void DisposeOfTestWebApplicationFactory()
+    {
+        webApplicationFactory?.Dispose();
+    }
+    
+    protected async Task CreateAndSetAuthToken(HttpClient client, bool isEmptyUserId = false)
+    {
+        var secret = new RequestSecret("TEST", isEmptyUserId);
         var authToken = await client.PostAsync("/api/authtest/get-bearer-token",
             new StringContent(JsonSerializer.Serialize(secret),
                 Encoding.UTF8,
                 "application/json"));
-        var accessToken = await authToken.Content.ReadFromJsonAsync<AccessToken>();
+        accessToken = await authToken.Content.ReadFromJsonAsync<AccessToken>();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken!.Token);
     }
 }
