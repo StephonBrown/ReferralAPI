@@ -7,6 +7,7 @@ using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Repositories;
 using Livefront.Referrals.DataAccess.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -23,12 +24,15 @@ public class Program
         builder.Services.AddControllers();
         AddNameHttpClients(builder);
         ConfigureServices(builder.Services);
+        
         // Configure logging using Serilog Sinks for both the console and a local file
         // Note: We can explore other sinks in the future for visualization
         // This gets the configuration from app-settings.json
         builder.Host.UseSerilog((context, loggerConfig) =>
             loggerConfig.ReadFrom.Configuration(context.Configuration)
         );
+        
+        builder.Services.AddProblemDetails();
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         
         //This sets up JWT configuration for our authentication
@@ -48,7 +52,11 @@ public class Program
             });
         
         var app = builder.Build();
-        CreateNewDatase(app.Services);
+
+        app.UseExceptionHandler();
+        
+        CreateNewDatabase(app.Services);
+        
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
@@ -131,7 +139,12 @@ public class Program
         };
     }
 
-    private static void CreateNewDatase(IServiceProvider serviceProvider)
+    /// <summary>
+    ///  This is a bit of a hack to get the database seeded
+    /// It is not recommended to use this in production
+    /// </summary>
+    /// <param name="serviceProvider"></param>
+    private static void CreateNewDatabase(IServiceProvider serviceProvider)
     {
         using (var scope = serviceProvider.CreateScope())
         {
