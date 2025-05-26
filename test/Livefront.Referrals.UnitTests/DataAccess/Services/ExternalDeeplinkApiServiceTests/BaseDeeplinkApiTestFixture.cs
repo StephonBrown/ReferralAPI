@@ -9,7 +9,7 @@ namespace Livefront.Referrals.UnitTests.DataAccess.Services.ExternalDeeplinkApiS
 
 public class BaseDeeplinkApiTestFixture
 {
-    protected IExternalDeeplinkApiService externalDeeplinkApiService;
+    protected IExternalDeeplinkApiService externalDeeplinkApiService = null!;
     protected readonly CancellationToken cancellationToken = CancellationToken.None;
     protected MockHttpMessageHandler mockHttpHandler;
     protected HttpClient mockHttpClient;

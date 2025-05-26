@@ -66,7 +66,7 @@ public class WhenCreatingReferralLink : BaseRepositoryTestFixture
     public void GivenReferralLinkNull_ThenThrowsArgumentNullException()
     {
         //Act/Assert
-        Assert.ThrowsAsync<ArgumentNullException>(async () => await referralLinkRepository.Create(null, cancellationToken));
+        Assert.ThrowsAsync<ArgumentNullException>(async () => await referralLinkRepository.Create(null!, cancellationToken));
     }
     
     [Test]
