@@ -16,13 +16,6 @@ A referral is a way to track users who have been referred to the Carton Caps app
 A referral link is a unique URL that contains a referral code. When a new user clicks on the referral link, they are redirected to the Carton Caps application and the referrer's referral code is then automatically filled during their account setup. 
 This allows the existing user to be credited with the referral without the new user having to manually enter the referral code.
 
-## How Does a Referral Link Work?
-1. A user generates a referral link using the Carton Caps application by selecting a channel to share the link.
-2. The user shares the referral link with a potential new user through the selected channel (e.g. SMS, Email, etc.).
-3. The potential new user clicks on the referral link which is a deferred deeplink that redirects them to the appropriate app store (Google Play Store or Apple App Store) to download the Carton Caps application or if they already have the app installed, it opens the app directly to the appropriate screen(deeplink).
-4. Once the new user downloads and opens the app, the referral code is automatically filled in during the account setup process.
-5. The new user completes the account setup process and the referrer is credited with the referral.
-
 #### What is a deferred deeplink?
 A _deferred deeplink_ allows for potential users who may not have the application installed to be redirected to the appropriate app store, download the app, and on the first open use the appropriate referral code and other parameters to shape their first experience.
 This allows for a seamless experience for the new user and ensures that the referrer is credited with the referral.
@@ -94,11 +87,13 @@ when the API is running locally.
 
 ## Referral Process
 The referral process is designed to be simple and straightforward. There are 3 possible ways that a referral can be created:
+
 ### A New User Signs Up Using a Referral Code
 When a new user signs up for the Carton Caps application using an existing user's referral code, the following steps occur:
 1. The new user enters the referral code during the account setup process.
+2. If the referral code is valid, a new completed referral is created using the new user's ID and the referrer's referral code.
 
-### A Potential User Clicks on a Referral Link and Tey Already Have the App Installed
+### A Potential User Clicks on a Referral Link and They Already Have the App Installed
 When a potential user clicks on a referral link and they already have the Carton Caps application installed, the following steps occur:
 1. The potential user clicks on the referral link.
 2. The referral link redirects the user to the Carton Caps application using a deferred deeplink.
@@ -115,15 +110,17 @@ When a potential user clicks on a referral link and they do not have the Carton 
 ## How to Simulate a Referral Using the API
 To simulate a referral using the API, you can follow these steps:
 1. Create an bearer token using the AuthTest endpoint. `/api/authtest/get-bearer-token` and the secret_code `TEST`
-2. Use the UserTest endpoints to create a new user.
-3. Use the POST endpoint to create a new referral using the new user's ID and the referrer's referral code `TESTCODE`
-4. Retrieve the referrals using the GET  endpoint to verify that the referral was created successfully.
+2. Add the token to the **Authorize** dropdown in Swagger
+3. Use the UserTest endpoints to create a new user.
+4. Use the POST endpoint to create a new referral using the new user's ID and the referrer's referral code `TESTCODE`
+5. Retrieve the referrals using the GET endpoint to verify that the referral was created successfully.
 
 ## How to Simulate a Referral Link Generation Using the API
 To simulate a referral link generation using the API, you can follow these steps:
 1. Create an bearer token using the AuthTest endpoint. `/api/authtest/get-bearer-token` and the secret_code `TEST`
-2. Use the ReferralLink endpoints to create a new referral. **Note:** _The bearer token will have the user ID of the user that is creating the referral link._
-3. Retrieve the referral link using the GET endpoint to verify that the referral link was created successfully.
+2. Add the token to the **Authorize** dropdown in Swagger
+3. Use the ReferralLink endpoints to create a new referral. **Note:** _The bearer token will have the user ID of the user that is creating the referral link._
+4. Retrieve the referral link using the GET endpoint to verify that the referral link was created successfully.
 
 ## Technical Considerations
 In order to mitigate abuse there are a few security pieces in place:
@@ -137,3 +134,4 @@ In order to mitigate abuse there are a few security pieces in place:
 Future considerations could include:
 - Adding rate limiting to the API endpoints to prevent abuse.
 - Adding caching to the Get Links endpoint to improve performance
+- The front-end app may want to push complete referral calls to a queue to allow for async processing so those referrals aren't lost.
