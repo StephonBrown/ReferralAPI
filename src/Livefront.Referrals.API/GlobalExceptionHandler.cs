@@ -54,7 +54,7 @@ public class GlobalExceptionHandler : IExceptionHandler
                 break;
             case ArgumentException:
                 problemDetails.Status = (int)HttpStatusCode.BadRequest;
-                problemDetails.Title = exception.GetType().Name;
+                problemDetails.Title = "Bad Request";
                 problemDetails.Detail = exception.Message;
                 break;
             case UnauthorizedAccessException:
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler : IExceptionHandler
             default:
                 problemDetails.Status = (int)HttpStatusCode.InternalServerError;
                 problemDetails.Title = "Internal Server Error";
-                problemDetails.Detail = "Internal Server Error";
+                problemDetails.Detail = "An error occurred while processing your request. Please try again later.";
                 break;
         }
         
