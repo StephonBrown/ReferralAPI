@@ -13,7 +13,7 @@ public interface IReferralLinkService
     /// <param name="userId">The unique id of the user.</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation if needed or on timeout.</param> 
     /// <returns>A <see cref="Task"/> that represents the async operation, containing the <see cref="ReferralLinkDTO"/>.</returns>
-    Task<ReferralLinkDTO?> CreateReferralLink(Guid userId, CancellationToken cancellationToken);
+    Task<ReferralLinkDTO> CreateReferralLink(Guid userId, CancellationToken cancellationToken);
     
     /// <summary>
     /// Retrieves the referral link for a specific user if it exists, or returns null if it doesn't.
@@ -21,7 +21,7 @@ public interface IReferralLinkService
     /// <param name="userId">The user identifier</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation if needed or on timeout.</param>
     /// <returns>A <see cref="Task"/> that represents the async operation, containing the <see cref="ReferralLinkDTO"/>.</returns>
-    Task<ReferralLinkDTO?> GetReferralLink(Guid userId, CancellationToken cancellationToken);
+    Task<ReferralLinkDTO> GetReferralLink(Guid userId, CancellationToken cancellationToken);
     
     /// <summary>
     /// Extends the time-to-live(TTL) of a referral link for a specific user.

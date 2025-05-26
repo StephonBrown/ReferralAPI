@@ -27,7 +27,7 @@ public class ReferralLinkService : IReferralLinkService
         this.logger = logger;
     }
     /// <inheritdoc />
-    public async Task<ReferralLinkDTO?> CreateReferralLink(Guid userId, CancellationToken cancellationToken)
+    public async Task<ReferralLinkDTO> CreateReferralLink(Guid userId, CancellationToken cancellationToken)
     {
         var user = await ValidateUserIdAndReturnUser(userId, cancellationToken);
 
@@ -68,11 +68,16 @@ public class ReferralLinkService : IReferralLinkService
     }
     
     /// <inheritdoc />
-    public async Task<ReferralLinkDTO?> GetReferralLink(Guid userId, CancellationToken cancellationToken)
+    public async Task<ReferralLinkDTO> GetReferralLink(Guid userId, CancellationToken cancellationToken)
     {
         var user = await ValidateUserIdAndReturnUser(userId, cancellationToken);
 
         var referralLink = await referralLinkRepository.GetByUserId(user!.Id, cancellationToken);
+        if (referralLink == null)
+        {
+            logger.LogWarning("Referral link for {UserId} could not be found", userId);
+            throw new ReferralLinkNotFoundException(userId);
+        }
         return referralLink.ToReferralLinkDto();
     }
 
