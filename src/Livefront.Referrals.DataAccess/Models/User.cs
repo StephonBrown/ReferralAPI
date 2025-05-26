@@ -7,7 +7,7 @@ namespace Livefront.Referrals.DataAccess.Models;
 [Table("Users")]
 public class User
 {
-    [JsonPropertyName("id")] 
+    [JsonIgnore]
     public Guid Id { get; set; }
 
     [Required]
