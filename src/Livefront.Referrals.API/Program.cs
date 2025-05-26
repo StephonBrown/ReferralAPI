@@ -1,5 +1,4 @@
 using System.Text;
-using System.Threading.RateLimiting;
 using Livefront.BusinessLogic.Services;
 using Livefront.Referrals.API.Configuration;
 using Livefront.Referrals.API.Services;
@@ -8,9 +7,10 @@ using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Repositories;
 using Livefront.Referrals.DataAccess.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 using Serilog;
 
 namespace Livefront.Referrals.API;
@@ -32,6 +32,23 @@ public class Program
         builder.Host.UseSerilog((context, loggerConfig) =>
             loggerConfig.ReadFrom.Configuration(context.Configuration)
         );
+        builder.Services.AddOpenApiDocument(options =>
+        {
+            options.Title = "Livefront Referrals API";
+            options.Version = "v1";
+            options.Description = "API for managing referrals and referral links.";
+            options.DocumentName = "Livefront.Referrals.API";
+            
+            // Adds the ability to pass a bearer token in the header for authentication
+            options.OperationProcessors.Add(new OperationSecurityScopeProcessor("Auth"));
+            options.DocumentProcessors.Add(new SecurityDefinitionAppender("Auth", new OpenApiSecurityScheme
+            {
+                Type = OpenApiSecuritySchemeType.Http,
+                In = OpenApiSecurityApiKeyLocation.Header,
+                Scheme = "Bearer",
+                BearerFormat = "jwt"
+            }));
+        });
         
         builder.Services.AddProblemDetails();
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -55,10 +72,16 @@ public class Program
         var app = builder.Build();
 
         app.UseExceptionHandler();
-        
-        // This is a hack to get the database seeded in development
-        CreateNewDatabase(app.Services);
 
+        if (app.Environment.IsDevelopment())
+        {
+            // This is a hack to get the database seeded in development
+            CreateNewDatabase(app.Services);
+            
+            app.UseOpenApi();
+            app.UseSwaggerUi(); 
+        }
+        
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
