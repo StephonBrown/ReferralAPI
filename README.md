@@ -109,7 +109,7 @@ When a potential user clicks on a referral link and they do not have the Carton 
 
 ## How to Simulate a Referral Using the API
 To simulate a referral using the API, you can follow these steps:
-1. Create an bearer token using the AuthTest endpoint. `/api/authtest/get-bearer-token` and the secret_code `TEST`
+1. Create an bearer token using the AuthTest endpoint. `/api/authtest/get-bearer-token`, the secret_code `TEST`, and is_empty_user_id to `false`
 2. Add the token to the **Authorize** dropdown in Swagger
 3. Use the UserTest endpoints to create a new user.
 4. Use the POST endpoint to create a new referral using the new user's ID and the referrer's referral code `TESTCODE`
@@ -117,7 +117,7 @@ To simulate a referral using the API, you can follow these steps:
 
 ## How to Simulate a Referral Link Generation Using the API
 To simulate a referral link generation using the API, you can follow these steps:
-1. Create an bearer token using the AuthTest endpoint. `/api/authtest/get-bearer-token` and the secret_code `TEST`
+1. Create an bearer token using the AuthTest endpoint. `/api/authtest/get-bearer-token`, the secret_code `TEST`, and is_empty_user_id to `false`
 2. Add the token to the **Authorize** dropdown in Swagger
 3. Use the ReferralLink endpoints to create a new referral. **Note:** _The bearer token will have the user ID of the user that is creating the referral link._
 4. Retrieve the referral link using the GET endpoint to verify that the referral link was created successfully.
