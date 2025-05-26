@@ -257,7 +257,7 @@ public class WhenCompletingReferral : BaseControllerTestFixture
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        DisposeOfTestWebApplicationFactory();
+        Cleanup();
     }
     
     [TearDown]

@@ -23,10 +23,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="API\ReferralLinkControllerTests\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\src\Livefront.BusinessLogic\Livefront.BusinessLogic.csproj" />
       <ProjectReference Include="..\..\src\Livefront.Referrals.API\Livefront.Referrals.API.csproj" />
       <ProjectReference Include="..\..\src\Livefront.Referrals.DataAccess\Livefront.Referrals.DataAccess.csproj" />
