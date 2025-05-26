@@ -1,4 +1,5 @@
 using Livefront.BusinessLogic.Extensions;
+using Livefront.BusinessLogic.Models;
 using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -42,7 +43,7 @@ public class UserTestController : ControllerBase
     /// <response code="500">If there is an internal server error.</response>
     [HttpGet]
     [Route("get-test-user")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDTO))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> GetTestUser(CancellationToken cancellationToken)
