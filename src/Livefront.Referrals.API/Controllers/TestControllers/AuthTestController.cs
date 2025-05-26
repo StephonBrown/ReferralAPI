@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Livefront.Referrals.API.Controllers;
+namespace Livefront.Referrals.API.Controllers.TestControllers;
 
 /// <summary>
 /// This is  a test controller to provide developers and tests with a way to
@@ -41,7 +41,7 @@ public class AuthTestController : ControllerBase
         if(requestSecret.SecretCode == "TEST")
         {
             var testUser = await userRepository.GetUserByReferralCode("TESTCODE", cancellationToken);
-            var token = GenerateAccessToken(testUser!);
+            var token = GenerateAccessToken(testUser!, requestSecret.IsEmptyUserId);
             var accessToken = new AccessToken
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token)
@@ -50,19 +50,21 @@ public class AuthTestController : ControllerBase
         }
         return BadRequest("Invalid secret code. Please provide the correct secret code.");
     }
-    
+
+
     /// <summary>
     /// This method generates a JWT access token for the a test user
     /// </summary>
     /// <param name="user">the user who will use the token</param>
+    /// <param name="isEmptyUserId"> if true, the user ID will be set to an empty GUID.</param>
     /// <returns>the generated JWT token</returns>
-    private JwtSecurityToken GenerateAccessToken(User user)
+    private JwtSecurityToken GenerateAccessToken(User user, bool isEmptyUserId = false)
     {
         // Create user claims
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user.FirstName),
-            new Claim(ClaimTypes.Sid, user.Id.ToString()),
+            new Claim(ClaimTypes.Sid, isEmptyUserId ? "" : user.Id.ToString()),
             new Claim(ClaimTypes.Email, user.Email),
         };
 

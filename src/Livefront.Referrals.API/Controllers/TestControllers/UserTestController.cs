@@ -2,7 +2,7 @@ using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Livefront.Referrals.API.Controllers;
+namespace Livefront.Referrals.API.Controllers.TestControllers;
 
 /// <summary>
 /// This is a test controller to provide developers and tests with a way to
@@ -25,11 +25,7 @@ public class UserTestController : ControllerBase
         this.logger = logger;
     }
     
-    /// <summary>
-    /// This test controller to test provide developers and testers with a way to retrieve a test user
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+
     [HttpGet]
     [Route("get-test-user")]
     public async Task<IActionResult> GetTestUser(CancellationToken cancellationToken)
@@ -41,7 +37,7 @@ public class UserTestController : ControllerBase
     
     [HttpGet]
     [Route("/{id:guid}")]
-    public async Task<IActionResult> GetUserById(System.Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetUserById(Guid id, CancellationToken cancellationToken)
     {
         logger.LogInformation("Get test user by ID endpoint called");
         if (id == Guid.Empty)
