@@ -76,7 +76,7 @@ public class Program
     private static void AddNameHttpClients(WebApplicationBuilder builder)
     {
         var deeplinkApiConfig = builder.Configuration.GetSection("DeeplinkApi").Get<DeepLinkApiConfig>();
-        builder.Services.AddHttpClient<ExternalDeeplinkApiService>( client =>
+        builder.Services.AddHttpClient<ExternalDeeplinkApiServiceWrapper>( client =>
         {
             client.BaseAddress = new Uri(deeplinkApiConfig!.BaseAddress);
             client.DefaultRequestHeaders.Add("ApiToken", deeplinkApiConfig.ApiToken);
