@@ -1,5 +1,7 @@
+using Livefront.BusinessLogic.Extensions;
 using Livefront.Referrals.DataAccess.Models;
 using Livefront.Referrals.DataAccess.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Livefront.Referrals.API.Controllers.TestControllers;
@@ -11,6 +13,7 @@ namespace Livefront.Referrals.API.Controllers.TestControllers;
 /// In production use, the user should be created through the normal registration process using the user API.
 /// </summary>
 [ApiController]
+[AllowAnonymous]
 [Route("api/[controller]")]
 public class UserTestController : ControllerBase
 {
@@ -25,37 +28,54 @@ public class UserTestController : ControllerBase
         this.logger = logger;
     }
     
-
+    /// <summary>
+    /// Retrieves a test user by their referral code.
+    /// This is intended for testing purposes only.
+    /// </summary>
+    /// <remarks>
+    /// Sample request:
+    /// GET /api/userTest/get-test-user
+    /// </remarks>
+    /// <returns>A test user DTO with the referral code "TESTCODE".</returns>
+    /// <response code="200">Returns the test user.</response>
+    /// <response code="404">If the test user is not found.</response>
+    /// <response code="500">If there is an internal server error.</response>
     [HttpGet]
     [Route("get-test-user")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> GetTestUser(CancellationToken cancellationToken)
     {
         logger.LogInformation("User test endpoint called");
         var testUser = await userRepository.GetUserByReferralCode("TESTCODE", cancellationToken);
-        return Ok(testUser);
+        return Ok(testUser!.ToUserDTO());
     }
     
-    [HttpGet]
-    [Route("/{id:guid}")]
-    public async Task<IActionResult> GetUserById(Guid id, CancellationToken cancellationToken)
-    {
-        logger.LogInformation("Get test user by ID endpoint called");
-        if (id == Guid.Empty)
-        {
-            return BadRequest("User ID cannot be empty.");
-        }
-        
-        var testUser = await userRepository.GetById(id, cancellationToken);
-        if (testUser == null)
-        {
-            return NotFound($"User with ID {id} not found.");
-        }
-        
-        return Ok(testUser);
-    }
-    
+    /// <summary>
+    /// Creates a user in the database.
+    /// </summary>
+    /// <param name="user"> The user to create.</param>
+    /// <param name="cancellationToken"> Cancellation token to cancel the operation.</param>
+    /// <returns> The created user DTO.</returns>
+    /// <remarks>
+    /// Sample request:
+    /// POST /api/userTest/create-user
+    /// {
+    ///     "first_name": "Test",
+    ///     "last_name": "User",
+    ///     "referral_code": "ANOTHERCODE",
+    ///     "email": "user@user.com"
+    /// }
+    /// </remarks>
+    /// <response code="201">Returns the created user.</response>
+    /// <response code="400">If the user is null or invalid.</response>
+    /// <response code="500">If there is an internal server error.</response>
     [HttpPost]
-    public async Task<IActionResult> CreateTestUser([FromBody] User? user, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(User))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))] 
+    public async Task<IActionResult> CreateUser([FromBody] User? user, CancellationToken cancellationToken)
     {
         logger.LogInformation("Create test user endpoint called");
         if (user == null)
@@ -64,7 +84,7 @@ public class UserTestController : ControllerBase
         }
         
         var createdUser = await userRepository.Create(user, cancellationToken);
-        return Created($"/api/userTest/{createdUser.Id}", createdUser);
+        return Created($"/api/userTest/{createdUser.Id}", createdUser.ToUserDTO());
     }
     
     

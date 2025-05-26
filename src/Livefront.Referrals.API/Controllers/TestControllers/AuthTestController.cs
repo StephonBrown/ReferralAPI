@@ -17,6 +17,7 @@ namespace Livefront.Referrals.API.Controllers.TestControllers;
 /// The test user that is returned is seeded into the database for test usage.
 /// </summary>
 [ApiController]
+[AllowAnonymous]
 [Route("api/[controller]")]
 public class AuthTestController : ControllerBase
 {
@@ -31,9 +32,29 @@ public class AuthTestController : ControllerBase
         this.logger = logger;
     }
     
-    [AllowAnonymous]
+    /// <summary>
+    /// This endpoint is used to generate a JWT access token for a test user.
+    /// </summary>
+    /// <param name="requestSecret"> The code to creating a token for a test user.</param>
+    /// <param name="cancellationToken"> Cancellation token to cancel the operation.</param>
+    /// <returns> A JWT access token for the test user.</returns>
+    /// <remarks>
+    /// Sample request:
+    /// POST /api/authTest/get-bearer-token
+    /// {
+    ///     "secret_code": "code",
+    /// }
+    /// </remarks>
+    /// <response code="200">Returns the JWT access token for the test user.</response>
+    /// <response code="400">If the secret code is invalid.</response>
+    /// <response code="404"> If the test user is not found.</response>
+    /// <response code="500">If there is an internal server error.</response>
     [HttpPost]
     [Route("get-bearer-token")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccessToken))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> GetJWTBearerToken([FromBody]RequestSecret requestSecret, CancellationToken cancellationToken)
     {
         
