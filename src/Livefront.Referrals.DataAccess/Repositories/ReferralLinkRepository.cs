@@ -29,7 +29,7 @@ public class ReferralLinkRepository : IReferralLinkRepository
         {
             return await referralsContext
                 .ReferralLinks
-                .SingleOrDefaultAsync(link => link.UserId == userId, cancellationToken);
+                .FirstOrDefaultAsync(link => link.UserId == userId, cancellationToken);
         }
         catch (Exception e)
         {
