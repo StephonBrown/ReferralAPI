@@ -32,7 +32,7 @@ public class WhenGettingReferrals : BaseControllerTestFixture
     {
         // Arrange
         var testUserResponse = await client.GetAsync("/api/usertest/get-test-user");
-        var testUser = await testUserResponse.Content.ReadFromJsonAsync<User>();
+        var testUser = await testUserResponse.Content.ReadFromJsonAsync<UserDTO>();
         
         // Create users for referral
         var newRefereeUser = new User
@@ -73,9 +73,9 @@ public class WhenGettingReferrals : BaseControllerTestFixture
         // Assert that each referral matches the created users
         foreach (var referralDto in referralDtos)
         {
-            var assertionReferee = createdUsers.FirstOrDefault(user => user.Id == referralDto!.UserId);
+            var assertionReferee = createdUsers.FirstOrDefault(user => user.Id == referralDto.UserId);
             
-            Assert.That(assertionReferee!.FirstName, Is.EqualTo(referralDto!.FirstName));
+            Assert.That(assertionReferee!.FirstName, Is.EqualTo(referralDto.FirstName));
             Assert.That(assertionReferee.LastName, Is.EqualTo(referralDto.LastName));
             Assert.That(referralDto.Status, Is.EqualTo(ReferralStatus.Complete));
         }
@@ -123,11 +123,11 @@ public class WhenGettingReferrals : BaseControllerTestFixture
     }
     
 
-    private async Task CreateReferrals(string referralCode, params User[] newRefereeUsers)
+    private async Task CreateReferrals(string referralCode, params UserDTO[] newRefereeUsers)
     {
         foreach (var referee in newRefereeUsers)
         {
-            var createReferralRequest = new CreateReferralRequest(referee!.Id, referralCode);
+            var createReferralRequest = new CreateReferralRequest(referee.Id, referralCode);
             await client.PostAsync($"/api/referrals",
                 new StringContent(JsonSerializer
                         .Serialize(createReferralRequest),
@@ -137,9 +137,9 @@ public class WhenGettingReferrals : BaseControllerTestFixture
         }
     }
 
-    private async Task<User[]> CreateReferees(params User[] users)
+    private async Task<UserDTO[]> CreateReferees(params User[] users)
     {
-        var userList = new List<User>();
+        var userList = new List<UserDTO>();
         foreach (var user in users)
         {
             var refereeResponse =
@@ -148,7 +148,7 @@ public class WhenGettingReferrals : BaseControllerTestFixture
                         JsonSerializer.Serialize(user),
                         Encoding.UTF8,
                         "application/json"));
-            var createdUser = await refereeResponse.Content.ReadFromJsonAsync<User>();
+            var createdUser = await refereeResponse.Content.ReadFromJsonAsync<UserDTO>();
             userList.Add(createdUser!);
         }
 

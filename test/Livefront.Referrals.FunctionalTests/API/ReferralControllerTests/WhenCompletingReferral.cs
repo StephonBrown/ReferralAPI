@@ -15,7 +15,7 @@ public class WhenCompletingReferral : BaseControllerTestFixture
 {
     private HttpClient client = null!;
     private string referrersReferralCode = string.Empty;
-    private User? referee;
+    private UserDTO? referee;
     private CreateReferralRequest? createReferralRequest;
     
     [OneTimeSetUp]
@@ -220,7 +220,7 @@ public class WhenCompletingReferral : BaseControllerTestFixture
         // Arrange
         referrersReferralCode = "TESTCODE";
         var testUserResponse = await client.GetAsync("/api/usertest/get-test-user");
-        var testUser = await testUserResponse.Content.ReadFromJsonAsync<User>();
+        var testUser = await testUserResponse.Content.ReadFromJsonAsync<UserDTO>();
         
         await CreateAndSetAuthToken(client);
         createReferralRequest = new CreateReferralRequest(testUser!.Id, referrersReferralCode);
@@ -242,7 +242,7 @@ public class WhenCompletingReferral : BaseControllerTestFixture
         Assert.That(errorResponse!.Detail, Is.EqualTo("Referrer and referee cannot be the same user"));
     }
 
-    private async Task<User?> CreateReferee(User user)
+    private async Task<UserDTO?> CreateReferee(User user)
     {
         var refereeResponse =
             await client.PostAsync("/api/usertest",
@@ -251,7 +251,7 @@ public class WhenCompletingReferral : BaseControllerTestFixture
                     Encoding.UTF8,
                     "application/json"));
 
-        return await refereeResponse.Content.ReadFromJsonAsync<User>();
+        return await refereeResponse.Content.ReadFromJsonAsync<UserDTO>();
     }
 
     [OneTimeTearDown]

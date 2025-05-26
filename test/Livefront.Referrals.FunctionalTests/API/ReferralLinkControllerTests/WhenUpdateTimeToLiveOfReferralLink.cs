@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using Livefront.BusinessLogic.Models;
+using Livefront.Referrals.DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Livefront.Referrals.FunctionalTests.API.ReferralLinkControllerTests;
@@ -26,12 +27,15 @@ public class WhenUpdateTimeToLiveOfReferralLink : BaseControllerTestFixture
     {
         // Arrange
         await CreateAndSetAuthToken(client);
+        var testUserResponse = await client.GetAsync("/api/usertest/get-test-user");
+        var testUser = await testUserResponse.Content.ReadFromJsonAsync<UserDTO>();
+        
         var createLinkResponse = await client
             .PostAsync($"/api/referrallinks", null);
         var createdLink = await createLinkResponse.Content.ReadFromJsonAsync<ReferralLinkDTO>();
 
         // Act
-        var response = await client.PutAsync("/api/referrallinks", null);
+        var response = await client.PutAsync($"/api/referrallinks/{testUser!.Id}", null);
         var updatedReferralLink = await response.Content.ReadFromJsonAsync<ReferralLinkDTO>();
 
         // Assert
@@ -42,20 +46,18 @@ public class WhenUpdateTimeToLiveOfReferralLink : BaseControllerTestFixture
     }
     
     [Test]
-    public async Task GivenUserIdIsEmpty_ShouldReturnUnauthorized()
+    public async Task GivenUserIdIsEmpty_ShouldReturnBadRequest()
     {
         // Arrange
-        await CreateAndSetAuthToken(client, isEmptyUserId: true);
-
+        await CreateAndSetAuthToken(client);
         // Act
-        var response = await client
-            .GetAsync($"/api/referrallinks");
+        var response = await client.PutAsync($"/api/referrallinks/{Guid.Empty}", null);
 
         // Assert
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         var errorResponse = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-        Assert.That(errorResponse!.Title, Is.EqualTo("Unauthorized"));
-        Assert.That(errorResponse.Detail, Contains.Substring("Not authorized"));
+        Assert.That(errorResponse!.Title, Is.EqualTo("Bad Request"));
+        Assert.That(errorResponse.Detail, Contains.Substring("User ID must not be empty"));
     }   
     
     [Test]
@@ -63,9 +65,11 @@ public class WhenUpdateTimeToLiveOfReferralLink : BaseControllerTestFixture
     {
         // Arrange
         await CreateAndSetAuthToken(client);
-        
+        var testUserResponse = await client.GetAsync("/api/usertest/get-test-user");
+        var testUser = await testUserResponse.Content.ReadFromJsonAsync<UserDTO>();
+
         // Act
-        var response = await client.PutAsync("/api/referrallinks", null);
+        var response = await client.PutAsync($"/api/referrallinks/{testUser!.Id}", null);
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
