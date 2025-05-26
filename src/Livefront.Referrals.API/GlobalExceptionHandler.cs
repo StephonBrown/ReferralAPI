@@ -56,6 +56,11 @@ public class GlobalExceptionHandler : IExceptionHandler
                 problemDetails.Title = exception.GetType().Name;
                 problemDetails.Detail = exception.Message;
                 break;
+            case UnauthorizedAccessException:
+                problemDetails.Status = (int)HttpStatusCode.Unauthorized;
+                problemDetails.Title = "Unauthorized";
+                problemDetails.Detail = "You are not authorized to access this resource";
+                break;
             default:
                 problemDetails.Status = (int)HttpStatusCode.InternalServerError;
                 problemDetails.Title = "Internal Server Error";
