@@ -15,7 +15,7 @@ public class WhenDeletingLink : BaseDeeplinkApiTestFixture
         public void Setup()
         {
             CreateMockHttpHandlerAndHttpClient();
-            externalDeeplinkApiService = new ExternalDeeplinkApiService(mockHttpClient, logger);
+            externalDeeplinkApiService = new ExternalDeeplinkApiServiceWrapper(mockHttpClient, logger);
         }
 
         [Test]

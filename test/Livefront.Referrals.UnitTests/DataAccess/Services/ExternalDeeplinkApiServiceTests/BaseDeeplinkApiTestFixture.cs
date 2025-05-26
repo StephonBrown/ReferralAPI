@@ -14,7 +14,7 @@ public class BaseDeeplinkApiTestFixture
     protected MockHttpMessageHandler mockHttpHandler;
     protected HttpClient mockHttpClient;
     protected static readonly Uri LinkApiBaseAddress = new("https://deeplink-api.com");
-    protected ILogger<ExternalDeeplinkApiService> logger = Substitute.For<ILogger<ExternalDeeplinkApiService> >();
+    protected ILogger<ExternalDeeplinkApiServiceWrapper> logger = Substitute.For<ILogger<ExternalDeeplinkApiServiceWrapper> >();
     
     
     protected MockedRequest SetExceptionThrowingRequestHandler(HttpMethod httpMethod, Uri endpoint, Exception exception)
