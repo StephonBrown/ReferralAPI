@@ -3,6 +3,7 @@ using Livefront.BusinessLogic.Exceptions;
 using Livefront.Referrals.API.Models;
 using Livefront.Referrals.DataAccess.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Livefront.Referrals.API;
 
@@ -20,47 +21,48 @@ public class GlobalExceptionHandler : IExceptionHandler
         Exception exception,
         CancellationToken cancellationToken)
     {
-        var errorResponse = CreateErrorResponseBasedOnException(exception);
-        httpContext.Response.StatusCode = errorResponse.StatusCode;
+        var problemDetails = CreateProblemDetailsBasedOnException(exception);
+        httpContext.Response.StatusCode = (int)problemDetails.Status!;
         await httpContext
             .Response
-            .WriteAsJsonAsync(errorResponse, cancellationToken);
+            .WriteAsJsonAsync(problemDetails, cancellationToken);
         return true;
     }
 
-    private ErrorResponse CreateErrorResponseBasedOnException(Exception exception)
+    private ProblemDetails CreateProblemDetailsBasedOnException(Exception exception)
     {
-        var errorResponse = new ErrorResponse();
+        var problemDetails = new ProblemDetails();
         
         switch (exception)
         {
             case UserNotFoundException userNotFoundException:
-                errorResponse.Message = userNotFoundException.Message;
-                errorResponse.StatusCode = (int)HttpStatusCode.NotFound;
-                errorResponse.Title = "User Not Found";
+                problemDetails.Detail = userNotFoundException.Message;
+                problemDetails.Status = (int)HttpStatusCode.NotFound;
+                problemDetails.Title = "User Not Found";
                 break;
             case ReferralLinkAlreadyExistsException:
-                errorResponse.StatusCode = (int)HttpStatusCode.Conflict;
-                errorResponse.Title = "Conflict";
-                errorResponse.Message = "Referral link already exists.";
+            case ReferralAlreadyExistsException:
+                problemDetails.Status = (int)HttpStatusCode.Conflict;
+                problemDetails.Title = "Conflict";
+                problemDetails.Detail = exception.Message;
                 break;
             case ExternalApiServiceException:
-                errorResponse.StatusCode = (int)HttpStatusCode.BadGateway;
-                errorResponse.Title = "Bad Gateway";
-                errorResponse.Message = "Unable to connect to required services";
+                problemDetails.Status = (int)HttpStatusCode.BadGateway;
+                problemDetails.Title = "Bad Gateway";
+                problemDetails.Detail = "Unable to connect to required services";
                 break;
             case ArgumentException:
-                errorResponse.StatusCode = (int)HttpStatusCode.BadRequest;
-                errorResponse.Title = exception.GetType().Name;
-                errorResponse.Message = exception.Message;
+                problemDetails.Status = (int)HttpStatusCode.BadRequest;
+                problemDetails.Title = exception.GetType().Name;
+                problemDetails.Detail = exception.Message;
                 break;
             default:
-                errorResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
-                errorResponse.Title = "Internal Server Error";
-                errorResponse.Message = "Internal Server Error";
+                problemDetails.Status = (int)HttpStatusCode.InternalServerError;
+                problemDetails.Title = "Internal Server Error";
+                problemDetails.Detail = "Internal Server Error";
                 break;
         }
         
-        return errorResponse;
+        return problemDetails;
     }
 }
