@@ -9,11 +9,11 @@ using Serilog;
 
 namespace Livefront.Referrals.DataAccess.Services;
 
-public class ExternalDeeplinkApiService : IExternalDeeplinkApiService
+public class ExternalDeeplinkApiServiceWrapper : IExternalDeeplinkApiService
 {
     private readonly HttpClient httpClient;
-    private readonly ILogger<ExternalDeeplinkApiService> logger;
-    public ExternalDeeplinkApiService(HttpClient httpClient, ILogger<ExternalDeeplinkApiService>  logger)
+    private readonly ILogger<ExternalDeeplinkApiServiceWrapper> logger;
+    public ExternalDeeplinkApiServiceWrapper(HttpClient httpClient, ILogger<ExternalDeeplinkApiServiceWrapper>  logger)
     {
         this.httpClient = httpClient;
         this.logger = logger;
@@ -86,7 +86,7 @@ public class ExternalDeeplinkApiService : IExternalDeeplinkApiService
     private async Task<TResponse> SendRequest<TResponse, TRequest>(HttpMethod httpMethod, string endpoint, TRequest? requestData, CancellationToken cancellationToken)
     {
         var contextualLogger = Log
-            .ForContext<ExternalDeeplinkApiService>()
+            .ForContext<ExternalDeeplinkApiServiceWrapper>()
             .ForContext("HttpMethod", httpMethod)
             .ForContext("Endpoint", endpoint);
         
