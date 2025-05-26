@@ -74,7 +74,7 @@ public class AuthTestController : ControllerBase
 
 
     /// <summary>
-    /// This method generates a JWT access token for the a test user
+    /// This method generates a JWT access token for the test user
     /// </summary>
     /// <param name="user">the user who will use the token</param>
     /// <param name="isEmptyUserId"> if true, the user ID will be set to an empty GUID.</param>
