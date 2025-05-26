@@ -10,17 +10,18 @@ using Microsoft.AspNetCore.Mvc;
 namespace Livefront.Referrals.FunctionalTests.API.ReferralControllerTests;
 
 [TestFixture]
-[Category("Functional")]
+[Category("Functional Tests")]
 public class WhenCompletingReferral : BaseControllerTestFixture
 {
     private HttpClient client = null!;
     private string referrersReferralCode = string.Empty;
     private User? referee;
     private CreateReferralRequest? createReferralRequest;
+    
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        webApplicationFactory = new TestWebApplicationFactory();
+        WebApplicationFactorySetup();
     }
     
     [SetUp]
@@ -256,7 +257,7 @@ public class WhenCompletingReferral : BaseControllerTestFixture
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        webApplicationFactory?.Dispose();
+        DisposeOfTestWebApplicationFactory();
     }
     
     [TearDown]
