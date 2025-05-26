@@ -29,7 +29,8 @@ Each user will have a unique link associated with their referral code.
 **URL** : `/api/authtest/get-bearer-token`
 ```json
 {
-  "secret_code": "TEST"
+  "secret_code": "TEST",
+  "is_empty_user_id" : "false"
 }
 ```
 
