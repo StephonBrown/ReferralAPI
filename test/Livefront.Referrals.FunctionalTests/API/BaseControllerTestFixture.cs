@@ -21,7 +21,7 @@ public class BaseControllerTestFixture
         return webApplicationFactory!.CreateClient();
     }
     
-    protected void DisposeOfTestWebApplicationFactory()
+    protected void Cleanup()
     {
         webApplicationFactory?.Dispose();
     }
