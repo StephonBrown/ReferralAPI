@@ -158,7 +158,7 @@ public class WhenGettingReferrals : BaseControllerTestFixture
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        DisposeOfTestWebApplicationFactory();
+        Cleanup();
     }
     
     [TearDown]

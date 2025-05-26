@@ -57,7 +57,7 @@ public class WhenGettingReferralLink : BaseReferralLinkServiceTestFixture
     }
     
     [Test]
-    public async Task GivenReferralLinkDoesNotExist_ThenReturnNull()
+    public async Task GivenReferralLinkDoesNotExist_ThenThrowReferralLinkNotFoundException()
     {
         // Arrange
         var userId = Guid.NewGuid();
@@ -75,11 +75,12 @@ public class WhenGettingReferralLink : BaseReferralLinkServiceTestFixture
         
         // Act
         var exception = Assert
-            .ThrowsAsync<ArgumentNullException>(async () => 
+            .ThrowsAsync<ReferralLinkNotFoundException>(async () => 
                 await referralLinkService.GetReferralLink(userId, cancellationToken));
 
         // Assert
-        Assert.That(exception!.ParamName, Is.EqualTo("referralLink"));
+        Assert.That(exception!.UserId, Is.EqualTo(userId));
+        Assert.That(exception.Message, Is.EqualTo($"Referral link for {userId} could not be found"));
         await ThenUserRepositoryGetByIdShouldBeCalled(userId, 1);
         await ThenReferralLinkRepositoryGetByUserIdShouldBeCalled(userId, 1);
     }
