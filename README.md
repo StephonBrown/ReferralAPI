@@ -32,7 +32,23 @@ Each user will have a unique link associated with their referral code.
 
 ## API Specifications
 
-**Note:** The following endpoints require a valid Token to be included in the **Authorize** header of the request.
+**Note:** The following endpoints require a valid Token to be included in the **Authorize** header of the request. To generate a token, Post to the AuthTest with the following Uri and body:
+**URL** : `/api/authtest/get-bearer-token`
+```json
+{
+  "secret_code": "TEST"
+}
+```
+
+This will return a valid token that can be used to access the API endpoints that look like the following:
+```json
+{
+  "Token": "abcd1234efgh5678ijkl9012mnop3456qrst7890uvwx1234yzab5678cdef9012ghij3456klmn7890opqr1234stuv5678wxyz9012abcd3456efgh7890ijklmnopqrstuvwx"
+}
+```
+Add the token to the **Authorization** header of your the requests.
+
+**Note**: _The functional controller tests are a good example of how to use the API and will return a valid token that can be used to access the API endpoints_
 
 ### Referral Link Endpoints
 The following endpoints are used to manage referral links. 
@@ -42,131 +58,82 @@ An example of a channel would be SMS, Email, etc. and would ba applied to the li
 
 `https://cartoncaps.link?&channel=SMS`
 
-#### Create Referral Link
-- This endpoint creates or retrieves a sharable deferred deeplink.
 
-**URL** : `/api/referralslinks`
+A full spec of these endpoints can be found at:
+- https://localhost:7251/swagger/index.html#/ReferralLinks
+- http://localhost:5285/swagger/index.html#/ReferralLinks
 
-**Method** : `POST`
+when the API is running locally.
 
-**Authorization required** : Yes
-
-**Permissions required** : None
-
-The userId will be retrieved from the bearer token.
-
-**Response Body**
-```json
-{
-    "referral_link": "https://cartoncaps.link/Afbs3",
-    "expiration_date": "2025-05-22T07:22Z"
-}
-```
-
-#### Success Response
-##### Created Response
-
-**Code** : `201 CREATED`
-```json
-{
-    "referral_link": "https://cartoncaps.link?referral_code={user_referral_code}",
-}
-```
-
-##### Link Already Exists Response
-**Code** : `200 OK`
-```json
-{
-    "referral_link": "https://cartoncaps.link?referral_code={user_referral_code}",
-}
-```
-
-#### Error Responses
-
-**Code** : `400 Bad Request`
-```json
-{
-    "code": 400,
-    "error_message": "This user does not exist"
-}
-```
-
-**Code** : `401 Unauthorized`
-```json
-{
-    "code": 401,
-    "error_message": "unauthorized to access this endpoint"
-}
-```
-
-**Code** : `500 Internal Server Error`
-```json
-{
-    "code": 500,
-    "error_message": "Link generation failed"
-}
-```
-
-### Get Referral Link
-Get the referral link for the current user. This will be used to retrieve ther current users referral link that was created or cached.
-- Note: The channel will need to be applied to the returned link when a selection of which channel is used to share.
-
-**URL** : `/api/referralslinks`
 
 ### Referral Endpoints
+The following endpoints are used to manage referrals.
 
-### Create Referral
-Add a new referral based on a specified referral code. This usually will come in the form of the referee just adding the referral code during account setup.
-- Note this could be used for referral links
-  **URL** : `/api/referrals`
-  **Method** : `POST`
-  **Auth required** : Yes
-  **Permissions required** : Admin
+A full spec of these endpoints can be found at:
+- https://localhost:7251/swagger/index.html#/Referrals
+- http://localhost:5285/swagger/index.html#/Referrals
 
-**Body**
-```json
-{
-    "user_id": "",
-    "referral_code": ""
-}
-```
-#### Success Response
-**Code** : `200 OK`
-#### Error Responses
-**Code** : `400 Bad Request`
-```json
-{
-    "code": 400,
-    "error_message": "This referral code does not exist"
-}
-```
+when the API is running locally.
 
-```json
-{
-    "code": 400,
-    "error_message": "This user does not exist"
-}
-```
+### User Test Endpoints
+The following endpoints are used to manage users.
 
-**Code** : `401 Unauthorized`
-```json
-{
-    "code": 401,
-    "error_message": "unauthorized to access this endpoint"
-}
-```
+A full spec of these endpoints can be found at:
+- https://localhost:7251/swagger/index.html#/UserTest
+- http://localhost:5285/swagger/index.html#/UserTest
 
-**Code** : `409 Conflict`
-```json
-{
-    "code": 409,
-    "error_message": "The user provided was already referred under a different referral code"
-}
-```
-**Code** : `500 Internal Server Error`
-```json
-{
-    "code": 500,
-    "error_message": "Unable to add user to referral table"
-}
-```
+when the API is running locally.
+
+### Auth Test Endpoints
+The following endpoints are used to manage authentication locally.
+A full spec of these endpoints can be found at:
+- https://localhost:7251/swagger/index.html#/AuthTest
+- http://localhost:5285/swagger/index.html#/AuthTest
+
+when the API is running locally.
+
+## Referral Process
+The referral process is designed to be simple and straightforward. There are 3 possible ways that a referral can be created:
+### A New User Signs Up Using a Referral Code
+When a new user signs up for the Carton Caps application using an existing user's referral code, the following steps occur:
+1. The new user enters the referral code during the account setup process.
+
+### A Potential User Clicks on a Referral Link and Tey Already Have the App Installed
+When a potential user clicks on a referral link and they already have the Carton Caps application installed, the following steps occur:
+1. The potential user clicks on the referral link.
+2. The referral link redirects the user to the Carton Caps application using a deferred deeplink.
+3. The Carton Caps application opens and the referral code is automatically filled in during the account setup process.
+4. The new user completes the account setup process and the referral is created using the new user's ID and the referrer's referral code.
+
+### A Potential User Clicks on a Referral Link and They Do Not Have the App Installed
+When a potential user clicks on a referral link and they do not have the Carton Caps application installed, the following steps occur:
+1. The potential user clicks on the referral link.
+2. The referral link redirects the user to the appropriate app store (Google Play Store or Apple App Store) to download the Carton Caps application.
+3. Once the new user downloads and opens the app, because there will be an SDK if a third party platform for deferred deeplinking, the referral code is automatically filled in during the account setup process.
+4. The new user completes the account setup process and the referral is created using the new user's ID and the referrer's referral code.
+
+## How to Simulate a Referral Using the API
+To simulate a referral using the API, you can follow these steps:
+1. Create an bearer token using the AuthTest endpoint. `/api/authtest/get-bearer-token` and the secret_code `TEST`
+2. Use the UserTest endpoints to create a new user.
+3. Use the POST endpoint to create a new referral using the new user's ID and the referrer's referral code `TESTCODE`
+4. Retrieve the referrals using the GET  endpoint to verify that the referral was created successfully.
+
+## How to Simulate a Referral Link Generation Using the API
+To simulate a referral link generation using the API, you can follow these steps:
+1. Create an bearer token using the AuthTest endpoint. `/api/authtest/get-bearer-token` and the secret_code `TEST`
+2. Use the ReferralLink endpoints to create a new referral. **Note:** _The bearer token will have the user ID of the user that is creating the referral link._
+3. Retrieve the referral link using the GET endpoint to verify that the referral link was created successfully.
+
+## Technical Considerations
+In order to mitigate abuse there are a few security pieces in place:
+- The referral link generated is unique to the user and contains a referral code that is associated with the user.
+  - **Note**: _The mock third-party services adds this as a query parameter to the link, but many platforms allow adding these parameters to the link in a different way._
+- The referrals have unique indexes on the referrer and new user IDs to prevent duplicate referrals.
+- There is prevention for duplicate referral links being created for the same user.
+- The API is secured using bearer tokens to ensure that only authorized users can access the endpoints.
+  - Admins and services will have access to the UpdateExpiration endpoint to update the expiration date of the referral links.
+
+Future considerations could include:
+- Adding rate limiting to the API endpoints to prevent abuse.
+- Adding caching to the Get Links endpoint to improve performance
