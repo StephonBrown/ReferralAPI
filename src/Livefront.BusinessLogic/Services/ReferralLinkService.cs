@@ -97,7 +97,6 @@ public class ReferralLinkService : IReferralLinkService
             throw new UserNotFoundException(userId);
         }
         
-        //Let's check if the referral code exists and return it if it does.
         var referralLink = await referralLinkRepository.GetByUserId(user.Id, cancellationToken);
 
         if (referralLink == null)
