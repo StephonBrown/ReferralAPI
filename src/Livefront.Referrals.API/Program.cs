@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.RateLimiting;
 using Livefront.BusinessLogic.Services;
 using Livefront.Referrals.API.Configuration;
 using Livefront.Referrals.API.Services;
@@ -35,7 +36,7 @@ public class Program
         builder.Services.AddProblemDetails();
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         
-        //This sets up JWT configuration for our authentication
+        //This sets up JWT configuration for our authentication for local development
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -50,13 +51,14 @@ public class Program
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]!))
                 };
             });
-        
+
         var app = builder.Build();
 
         app.UseExceptionHandler();
         
+        // This is a hack to get the database seeded in development
         CreateNewDatabase(app.Services);
-        
+
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
@@ -100,45 +102,6 @@ public class Program
         services.AddScoped<IExternalDeeplinkApiService, MockDeeplinkApiService>();
     }
     
-    private static void Seed(DbContext context)
-    {
-        context.Database.EnsureDeleted();
-        context.Database.EnsureCreated();
-        context
-            .Set<User>()
-            .AddRange(GetUsers());
-        context.SaveChanges();
-    }
-
-
-    private static IEnumerable<User> GetUsers()
-    {
-        return new[]
-        {
-            new User
-            {
-                FirstName = "Test",
-                LastName = "User",
-                Email = "test@email.com",
-                ReferralCode = "TESTCODE"
-            },
-            new User
-            {
-                FirstName = "John",
-                LastName = "Doe",
-                Email = "John@email.com",
-                ReferralCode = "JOHNCODE"
-            },
-            new User
-            {
-                FirstName = "Jane",
-                LastName = "Doe",
-                Email = "Jane@email.com",
-                ReferralCode = "JANECODE"
-            }
-        };
-    }
-
     /// <summary>
     ///  This is a bit of a hack to get the database seeded
     /// It is not recommended to use this in production
@@ -151,7 +114,33 @@ public class Program
             var context = scope.ServiceProvider.GetRequiredService<ReferralsContext>();
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
-            Seed(context);
+            SeedTestUser(context);
         }
     }
+    private static void SeedTestUser(DbContext context)
+    {
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
+        context
+            .Set<User>()
+            .AddRange(GetTestUser());
+        context.SaveChanges();
+    }
+
+
+    private static IEnumerable<User> GetTestUser()
+    {
+        return new[]
+        {
+            new User
+            {
+                FirstName = "Test",
+                LastName = "User",
+                Email = "test@email.com",
+                ReferralCode = "TESTCODE"
+            },
+        };
+    }
+
+
 }
