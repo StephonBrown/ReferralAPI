@@ -86,6 +86,7 @@ public class ReferralService : IReferralService
             logger.LogWarning("Referee user ID is empty. Referee user ID: {RefereeUserId}", refereeUserId);
             throw new ArgumentException("Referee user ID cannot be empty.", nameof(refereeUserId));
         }
+        
         if (string.IsNullOrWhiteSpace(referralCode))
         {
             logger.LogWarning("Referral code is null or empty. Referral code: {ReferralCode}", referralCode);
@@ -109,7 +110,7 @@ public class ReferralService : IReferralService
         if(referrer.Id == referee.Id)
         {
             logger.LogWarning("Referrer and referee cannot be the same user. Referrer ID: {ReferrerId}, Referee ID: {RefereeId}", referrer.Id, referee.Id);
-            throw new ArgumentException("Referrer and referee cannot be the same user.", nameof(refereeUserId));
+            throw new ArgumentException("Referrer and referee cannot be the same user");
         }
         
         var referral = new Referral
@@ -133,11 +134,5 @@ public class ReferralService : IReferralService
         
         logger.LogInformation("Referral created successfully. Referral ID: {ReferralId}", createdReferral.Id);
         return createdReferral.ToReferralDto(referee);
-    }
-    
-    /// <inheritdoc />
-    public async Task DeleteReferral(Guid referralId, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
     }
 }
