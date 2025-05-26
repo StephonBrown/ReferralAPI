@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Livefront.Referrals.API.Models;
 using Livefront.Referrals.API.Services;
 using Livefront.Referrals.DataAccess.Repositories;
@@ -18,13 +19,24 @@ namespace Livefront.Referrals.API.Controllers
             this.logger = logger;
             this.referralService = referralService;
         }
-        
+
         [Authorize]
         [HttpGet]
-        public IActionResult GetReferrals()
+        public async  Task<IActionResult> GetReferrals(CancellationToken cancellationToken)
         {
-            logger.LogInformation("GetReferrals called");
-            return Ok();
+            logger.LogDebug("GetReferrals called");
+            
+            // Retrieve the user ID from the access token claims
+            var userId = User.FindFirstValue(ClaimTypes.Sid);
+            
+            if (string.IsNullOrEmpty(userId))
+            {
+                logger.LogWarning("User ID not found in claims");
+                throw new UnauthorizedAccessException("User ID not found in claims. Ensure the user is authenticated.");
+            }
+
+            var referrals = await referralService.GetReferralsByReferrerUserId(Guid.Parse(userId), cancellationToken);
+            return Ok(referrals);
         }
         
         [Authorize]
